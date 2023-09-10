@@ -13,11 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Tasks\Exceptions\" />
-      <Folder Include="Tasks\Repositories\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\TaskManager.Shared.Abstractions\TaskManager.Shared.Abstractions.csproj" />
     </ItemGroup>
 

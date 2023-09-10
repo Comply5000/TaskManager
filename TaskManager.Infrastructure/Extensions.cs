@@ -9,10 +9,13 @@ using TaskManager.Application.Shared.Common.Identity;
 using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Core.TaskCategories.Repositories;
+using TaskManager.Core.Tasks.Repositories;
+using TaskManager.Infrastructure.EF.Common.Decorators;
 using TaskManager.Infrastructure.EF.Context;
 using TaskManager.Infrastructure.EF.Identity.Services;
 using TaskManager.Infrastructure.EF.Shared.Services;
 using TaskManager.Infrastructure.EF.TaskCategories.Repositories;
+using TaskManager.Infrastructure.EF.Tasks.Repositories;
 
 namespace TaskManager.Infrastructure;
 
@@ -21,6 +24,7 @@ public static class Extensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionDecorator<,>));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();
@@ -29,6 +33,7 @@ public static class Extensions
         services.AddScoped<ITokenService, TokenService>();
         
         services.AddScoped<ITaskCategoriesRepository, TaskCategoriesRepository>();
+        services.AddScoped<ITasksRepository, TasksRepository>();
         
         services.AddDbContext<EFContext>(options =>
         {

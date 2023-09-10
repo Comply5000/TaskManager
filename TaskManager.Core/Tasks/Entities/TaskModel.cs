@@ -20,21 +20,20 @@ public sealed class TaskModel : BaseEntity
 
     private TaskModel(){}
     
-    public TaskModel(string name, string description, DateTimeOffset? deadline, TaskStatus? status, Guid categoryId, List<SystemFile> files)
+    public TaskModel(string name, string? description, DateTimeOffset? deadline, TaskStatus? status, Guid categoryId)
     {
         Name = name;
         Description = description;
         Deadline = deadline;
         Status = status ?? TaskStatus.New;
         CategoryId = categoryId;
-        Files = files;
     }
 
-    public static TaskModel Create(string name, string description, DateTimeOffset? deadline, TaskStatus? status,
-        Guid categoryId, List<SystemFile> files)
-        => new(name, description, deadline, status, categoryId, files);
+    public static TaskModel Create(string name, string? description, DateTimeOffset? deadline, TaskStatus? status,
+        Guid categoryId)
+        => new(name, description, deadline, status, categoryId);
 
-    public TaskModel Update(string? name, string? description, DateTimeOffset? deadline, TaskStatus? status,
+    public TaskModel Update(string name, string? description, DateTimeOffset? deadline, TaskStatus? status,
         Guid categoryId)
     {
         Name = name;

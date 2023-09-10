@@ -18,4 +18,8 @@
       <ProjectReference Include="..\TaskManager.Shared\TaskManager.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Tasks\Queries\" />
+    </ItemGroup>
+
 </Project>

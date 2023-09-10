@@ -13,16 +13,16 @@ public sealed class TaskCategory : BaseEntity
 
     private TaskCategory() {}
 
-    private TaskCategory(string name, string description)
+    private TaskCategory(string name, string? description)
     {
         Name = name;
         Description = description;
     }
 
-    public static TaskCategory Create(string name, string description)
+    public static TaskCategory Create(string name, string? description)
         => new(name, description);
 
-    public TaskCategory Update(string name, string description)
+    public TaskCategory Update(string name, string? description)
     {
         Name = name;
         Description = description;
