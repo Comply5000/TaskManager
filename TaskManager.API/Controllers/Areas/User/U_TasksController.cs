@@ -12,7 +12,7 @@ using TaskManager.Shared.Responses;
 
 namespace TaskManager.API.Controllers.Areas.User;
 
-[Route("tasks")]
+[Route("api/tasks")]
 [ApiAuthorize(Roles = UserRoles.User)]
 public sealed class U_TasksController : BaseController
 {

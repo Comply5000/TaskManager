@@ -1,5 +1,7 @@
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TaskManager.API.Common.ResponseModels;
 using TaskManager.API.Extensions;
 using TaskManager.API.Filters;
@@ -11,10 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
-    .AddControllers(options => options.Filters.Add(new ApiExceptionFilter()))
+    .AddControllers(options =>
+    {
+        options.Filters.Add(new ApiExceptionFilter());
+    })
     .AddNewtonsoftJson(options =>
     {
-        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         options.SerializerSettings.Converters.Add(new TrimJsonStringFilter());
     });
 
@@ -57,6 +62,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.Use(async (context, next) =>
+{
+    context.Features.Get<IHttpMaxRequestBodySizeFeature>()!.MaxRequestBodySize = 1000000000;
+    await next();
+});
 
 app.UseHttpsRedirection();
 app.UseRouting();
