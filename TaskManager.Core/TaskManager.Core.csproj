@@ -3,7 +3,22 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="11.7.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.10" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Tasks\Exceptions\" />
+      <Folder Include="Tasks\Repositories\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TaskManager.Shared.Abstractions\TaskManager.Shared.Abstractions.csproj" />
+    </ItemGroup>
 
 </Project>

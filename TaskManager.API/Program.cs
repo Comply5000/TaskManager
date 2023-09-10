@@ -1,15 +1,57 @@
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using TaskManager.API.Common.ResponseModels;
+using TaskManager.API.Extensions;
+using TaskManager.API.Filters;
+using TaskManager.Application;
+using TaskManager.Core;
+using TaskManager.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services
+    .AddControllers(options => options.Filters.Add(new ApiExceptionFilter()))
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.Converters.Add(new TrimJsonStringFilter());
+    });
+
+builder.Services.Configure<ApiBehaviorOptions>(opt =>
+{
+    // Custom response from ModelValidation
+    opt.InvalidModelStateResponseFactory = actionContext =>
+    {
+        var errors = actionContext.ModelState
+            .Where(e => e.Value?.Errors.Count > 0)
+            .ToDictionary(a => a.Key, a => a.Value?.Errors.Select(b => b.ErrorMessage).ToArray());
+        
+        var response = new BadRequestObjectResult(new BadRequestResponse
+        {
+            Title = "One or more validation failures have occurred",
+            StatusCode = 400,
+            Errors = errors
+        });
+
+        return response;
+    };
+});
+
+builder.Services.AddCorsPolicy(builder.Configuration);
+builder.Services.AddIdentityConfig(builder.Configuration);
+builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerConfig();
+builder.Services.AddFluentValidationAutoValidation();
+
+builder.Services.AddApplication();
+builder.Services.AddCore();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,7 +59,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors("CorsPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
