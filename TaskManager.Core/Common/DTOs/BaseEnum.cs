@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Application.Common.DTOs;
+﻿namespace TaskManager.Core.Common.DTOs;
 
 public sealed record BaseEnum
 {

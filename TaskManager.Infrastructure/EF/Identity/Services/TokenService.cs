@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using TaskManager.Application.Shared.Common.Identity;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Shared.Configurations.Identity;
-using JsonWebToken = TaskManager.Application.Shared.Common.DTO.Identity.JsonWebToken;
+using JsonWebToken = TaskManager.Core.Identity.DTOs.JsonWebToken;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace TaskManager.Infrastructure.EF.Identity.Services;

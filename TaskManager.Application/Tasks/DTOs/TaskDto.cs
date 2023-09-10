@@ -1,6 +1,6 @@
-﻿using TaskManager.Application.Common.DTOs;
-using TaskManager.Application.Files.DTOs;
+﻿using TaskManager.Application.Files.DTOs;
 using TaskManager.Application.TaskCategories.DTOs;
+using TaskManager.Core.Common.DTOs;
 
 namespace TaskManager.Application.Tasks.DTOs;
 

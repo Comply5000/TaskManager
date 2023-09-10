@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Application.Shared.Common.DTO.Identity;
+﻿namespace TaskManager.Core.Identity.DTOs;
 
 public class JsonWebToken
 {

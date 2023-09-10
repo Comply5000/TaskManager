@@ -6,12 +6,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TaskManager.Application.Shared.Common.Identity;
+using TaskManager.Core.Files.Repositories;
+using TaskManager.Core.Files.Services;
 using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Core.TaskCategories.Repositories;
 using TaskManager.Core.Tasks.Repositories;
 using TaskManager.Infrastructure.EF.Common.Decorators;
 using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.EF.Files.Repositories;
+using TaskManager.Infrastructure.EF.Files.Services;
 using TaskManager.Infrastructure.EF.Identity.Services;
 using TaskManager.Infrastructure.EF.Shared.Services;
 using TaskManager.Infrastructure.EF.TaskCategories.Repositories;
@@ -34,6 +38,9 @@ public static class Extensions
         
         services.AddScoped<ITaskCategoriesRepository, TaskCategoriesRepository>();
         services.AddScoped<ITasksRepository, TasksRepository>();
+        
+        services.AddScoped<IFileRepository, FileRepository>();
+        services.AddScoped<IFileStorageService, DatabaseFileStorage>();
         
         services.AddDbContext<EFContext>(options =>
         {

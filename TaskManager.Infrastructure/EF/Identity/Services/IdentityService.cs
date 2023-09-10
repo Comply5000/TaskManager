@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Application.Shared.Common.DTO.Identity;
 using TaskManager.Application.Shared.Common.Identity;
 using TaskManager.Core.Identity.DTOs;
 using TaskManager.Core.Identity.Entities;

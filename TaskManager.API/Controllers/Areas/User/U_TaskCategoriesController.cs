@@ -10,7 +10,7 @@ using TaskManager.Shared.Responses;
 
 namespace TaskManager.API.Controllers.Areas.User;
 
-[Route("api/todo-task-categories")]
+[Route("task-categories")]
 [ApiAuthorize(Roles = UserRoles.User)]
 public sealed class U_TaskCategoriesController : BaseController
 {

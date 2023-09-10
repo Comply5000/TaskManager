@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TaskManager.Application.Shared.Common.DTO.Identity;
+namespace TaskManager.Core.Identity.DTOs;
 
 public sealed record SignUpDTO(string? UserName, string? Email, string? Password, string? ConfirmedPassword);
 

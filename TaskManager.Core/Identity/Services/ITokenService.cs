@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using TaskManager.Application.Shared.Common.DTO.Identity;
+using TaskManager.Core.Identity.DTOs;
 
 namespace TaskManager.Application.Shared.Common.Identity;
 

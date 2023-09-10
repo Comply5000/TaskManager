@@ -1,5 +1,4 @@
-﻿using TaskManager.Application.Shared.Common.DTO.Identity;
-using TaskManager.Core.Identity.DTOs;
+﻿using TaskManager.Core.Identity.DTOs;
 
 namespace TaskManager.Core.Identity.Services;
 

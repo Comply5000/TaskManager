@@ -1,4 +1,4 @@
-﻿using TaskManager.Application.Common.DTOs;
+﻿using TaskManager.Core.Common.DTOs;
 
 namespace TaskManager.Application.Files.DTOs;
 

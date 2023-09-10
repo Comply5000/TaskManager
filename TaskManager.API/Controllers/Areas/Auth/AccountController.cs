@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Mvc;
-using TaskManager.Application.Shared.Common.DTO.Identity;
 using TaskManager.Application.Shared.Common.Identity;
 using TaskManager.Core.Identity.DTOs;
 using TaskManager.Core.Identity.Services;

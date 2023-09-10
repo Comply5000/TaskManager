@@ -1,4 +1,7 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using TaskManager.Application.Files.Commands.UploadFile;
 using TaskManager.Core.Files.Entities;
 using TaskManager.Core.Tasks.Entities;
 using TaskManager.Core.Tasks.Repositories;
@@ -19,15 +22,27 @@ public sealed class CreateTaskHandler : IRequestHandler<CreateTask, CreateOrUpda
     
     public async Task<CreateOrUpdateResponse> Handle(CreateTask request, CancellationToken cancellationToken)
     {
-        var todoTask = TaskModel.Create(
+        var task = TaskModel.Create(
             request.Name,
             request.Description,
             request.Deadline,
             request.Status,
             request.CategoryId);
         
-        var todoTaskId = await _tasksRepository.AddAsync(todoTask, cancellationToken);
+        var taskId = await _tasksRepository.AddAsync(task, cancellationToken);
 
-        return new CreateOrUpdateResponse(todoTaskId);
+        await UploadFiles(request.Files, taskId, cancellationToken);
+
+        return new CreateOrUpdateResponse(taskId);
     }
+
+    private async Task UploadFiles(IFormFileCollection? files, Guid taskId, CancellationToken cancellationToken)
+    {
+        if (files is not null)
+            foreach (var file in files)
+            {
+                await _mediator.Send(new UploadFile(file, taskId), cancellationToken);
+            }
+    }
+    
 }
