@@ -23,7 +23,7 @@ public sealed class CreateTaskHandler : IRequestHandler<CreateTask, CreateOrUpda
     public async Task<CreateOrUpdateResponse> Handle(CreateTask request, CancellationToken cancellationToken)
     {
         var task = TaskModel.Create(
-            request.Name,
+            request.Name!,
             request.Description,
             request.Deadline,
             request.Status,

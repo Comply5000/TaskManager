@@ -8,7 +8,11 @@ using TaskManager.Core.Identity.Enums;
 using TaskManager.Core.Identity.Exceptions;
 using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Identity.Static;
+using TaskManager.Core.Shared.Services;
+using TaskManager.Core.TaskCategories.Entities;
 using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.EF.Shared.Services;
+using TaskManager.Shared;
 using TaskManager.Shared.Exceptions;
 
 namespace TaskManager.Infrastructure.EF.Identity.Services;
@@ -20,14 +24,16 @@ public sealed class IdentityService : IIdentityService
     private readonly RoleManager<Role> _roleManager;
     private readonly ITokenService _tokenService;
     private readonly SignInManager<User> _signInManager;
+    private readonly IDateService _dateService;
 
-    public IdentityService(EFContext context, UserManager<User> userManager, RoleManager<Role> roleManager, ITokenService tokenService, SignInManager<User> signInManager)
+    public IdentityService(EFContext context, UserManager<User> userManager, RoleManager<Role> roleManager, ITokenService tokenService, SignInManager<User> signInManager, IDateService dateService)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
         _tokenService = tokenService;
         _signInManager = signInManager;
+        _dateService = dateService;
     }
     
     public async Task SignUp(SignUpDTO dto, CancellationToken cancellationToken)
@@ -48,13 +54,21 @@ public sealed class IdentityService : IIdentityService
         {
             UserName = dto.UserName,
             Email = dto.Email,
-            UserStatus = UserStatus.Active
+            UserStatus = UserStatus.Unauthorized
         };
-
-        var createUser = await _userManager.CreateAsync(user, dto.Password);
+        
+        var createUser = await _userManager.CreateAsync(user, dto.Password!);
         
         if (!createUser.Succeeded)
             throw new CreateUserException(createUser.Errors);
+
+        #region Create default category
+        var defaultCategory = TaskCategory.Create(Globals.DefaultCategoryName, null);
+        defaultCategory.CreatedById = user.Id;
+        defaultCategory.CreatedAt = _dateService.CurrentDate();
+        await _context.TaskCategories.AddAsync(defaultCategory, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        #endregion
 
         var addRoleResult = await _userManager.AddToRoleAsync(user, UserRoles.User);
         if (!addRoleResult.Succeeded)
@@ -75,7 +89,8 @@ public sealed class IdentityService : IIdentityService
     public async Task<JsonWebToken> SignIn(SignInDTO dto, CancellationToken cancellationToken)
     {
         var user = await _context.Users.AsNoTracking()
-                       .Where(x => x.UserName == dto.EmailOrUserName || x.Email == dto.EmailOrUserName)
+                       .Where(x => (x.UserName == dto.EmailOrUserName || x.Email == dto.EmailOrUserName)
+                            && x.UserStatus == UserStatus.Active)
                        .FirstOrDefaultAsync(cancellationToken)
                    ?? throw new InvalidCredentialsException();
         

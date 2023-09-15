@@ -20,11 +20,11 @@ public sealed class UpdateTaskHandler : IRequestHandler<UpdateTask, CreateOrUpda
                          ?? throw new TaskNotFoundException();
 
         todoTask.Update(
-            request.Name,
+            request.Name!,
             request.Description,
             request.Deadline,
             request.Status,
-            (Guid)request.CategoryId!);
+            request.CategoryId);
 
         var todoTaskId = await _tasksRepository.UpdateAsync(todoTask, cancellationToken);
 

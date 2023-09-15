@@ -7,7 +7,7 @@ using TaskStatus = TaskManager.Core.Tasks.Enums.TaskStatus;
 namespace TaskManager.Application.Tasks.Commands.Create;
 
 public sealed record CreateTask(
-    string Name,
+    string? Name,
     string? Description,
     DateTimeOffset? Deadline,
     TaskStatus? Status,

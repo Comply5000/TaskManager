@@ -62,8 +62,10 @@ public class EFContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.CurrentValues["CreatedById"] = Guid.Parse(_userId);
-                        entry.CurrentValues["CreatedAt"] = DateTimeOffset.UtcNow;
+                        if (entry.CurrentValues["CreatedById"] is Guid createdById && createdById == Guid.Empty)
+                            entry.CurrentValues["CreatedById"] = Guid.Parse(_userId);
+                        if (entry.CurrentValues["CreatedAt"] is DateTimeOffset createdAt && createdAt == DateTimeOffset.MinValue)
+                            entry.CurrentValues["CreatedAt"] = DateTimeOffset.UtcNow;
                         entry.CurrentValues["EntryStatus"] = EntryStatus.Active;
                         break;
 

@@ -10,7 +10,7 @@ public sealed record UpdateTask(
     string? Description,
     DateTimeOffset? Deadline,
     TaskStatus? Status,
-    Guid? CategoryId) : IRequest<CreateOrUpdateResponse>
+    Guid CategoryId) : IRequest<CreateOrUpdateResponse>
 {
     [JsonIgnore] public Guid Id { get; set; }
 }
