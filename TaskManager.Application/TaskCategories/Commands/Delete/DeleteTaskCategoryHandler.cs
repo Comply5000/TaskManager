@@ -15,9 +15,12 @@ public sealed class DeleteTaskCategoryHandler : IRequestHandler<DeleteTaskCatego
     
     public async Task Handle(DeleteTaskCategory request, CancellationToken cancellationToken)
     {
+        if (await _taskCategoriesRepository.CountAsync(cancellationToken) < 2)
+            throw new UnableToDeleteLastTaskCategory();
+        
         var todoTaskCategory = await _taskCategoriesRepository.GetAsync(request.Id, cancellationToken)
                                ?? throw new TaskCategoryNotFoundException();
-        
+
         await _taskCategoriesRepository.DeleteAsync(todoTaskCategory, cancellationToken);
     }
 }

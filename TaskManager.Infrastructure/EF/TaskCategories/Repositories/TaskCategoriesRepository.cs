@@ -45,4 +45,7 @@ public sealed class TaskCategoriesRepository : ITaskCategoriesRepository
         _taskCategories.Remove(taskCategory);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<int> CountAsync(CancellationToken cancellationToken)
+        => await _taskCategories.CountAsync(cancellationToken);
 }
