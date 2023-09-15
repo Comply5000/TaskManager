@@ -8,7 +8,7 @@ using static Microsoft.IdentityModel.JsonWebTokens.JsonWebToken;
 
 namespace TaskManager.API.Controllers.Areas.Auth;
 
-[Route("api/account")]
+[Route($"{Endpoints.BaseUrl}/account")]
 public class AccountController : BaseController
 {
     private readonly IIdentityService _identityService;

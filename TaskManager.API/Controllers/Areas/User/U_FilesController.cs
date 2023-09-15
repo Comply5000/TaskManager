@@ -9,7 +9,7 @@ using TaskManager.Shared.Responses;
 
 namespace TaskManager.API.Controllers.Areas.User;
 
-[Route("api/files")]
+[Route($"{Endpoints.BaseUrl}/files")]
 [ApiAuthorize(Roles = UserRoles.User)]
 public sealed class U_FilesController : BaseController
 {

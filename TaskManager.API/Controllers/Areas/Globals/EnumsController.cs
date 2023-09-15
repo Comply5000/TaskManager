@@ -6,7 +6,7 @@ using TaskStatus = TaskManager.Core.Tasks.Enums.TaskStatus;
 
 namespace TaskManager.API.Controllers.Areas.Globals;
 
-[Route("api/enums")]
+[Route($"{Endpoints.BaseUrl}/enums")]
 public sealed class EnumsController : BaseController
 {
     

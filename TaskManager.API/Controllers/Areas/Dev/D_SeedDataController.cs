@@ -5,7 +5,7 @@ using TaskManager.Core.Identity.Static;
 
 namespace TaskManager.API.Controllers.Areas.Dev;
 
-[Route("api/seed")]
+[Route($"{Endpoints.BaseUrl}/seed")]
 public class D_SeedDataController : BaseController
 {
     private readonly RoleManager<Role> _roleManager;
