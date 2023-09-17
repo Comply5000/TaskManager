@@ -1,5 +1,6 @@
 ﻿using TaskManager.Application.Files.DTOs;
 using TaskManager.Core.Files.Entities;
+using TaskManager.Infrastructure.EF.Files.Queries.Static;
 
 namespace TaskManager.Infrastructure.EF.Files.Queries;
 
@@ -12,7 +13,7 @@ internal static class Extensions
             Id = file.Id,
             Name = file.Name,
             ContentType = file.ContentType,
-            TotalSize = file.TotalBytes,
+            Size = FileSize.Count(file.TotalBytes),
             Type = file.Type
         };
     }
