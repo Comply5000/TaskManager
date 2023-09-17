@@ -27,6 +27,7 @@ public sealed class CreateTaskHandler : IRequestHandler<CreateTask, CreateOrUpda
             request.Description,
             request.Deadline,
             request.Status,
+            request.Priority,
             request.CategoryId);
         
         var taskId = await _tasksRepository.AddAsync(task, cancellationToken);

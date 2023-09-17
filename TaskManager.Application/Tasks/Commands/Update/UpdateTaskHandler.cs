@@ -24,6 +24,7 @@ public sealed class UpdateTaskHandler : IRequestHandler<UpdateTask, CreateOrUpda
             request.Description,
             request.Deadline,
             request.Status,
+            request.Priority,
             request.CategoryId);
 
         var todoTaskId = await _tasksRepository.UpdateAsync(todoTask, cancellationToken);

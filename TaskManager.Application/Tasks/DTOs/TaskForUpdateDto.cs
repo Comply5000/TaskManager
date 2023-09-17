@@ -1,4 +1,5 @@
-﻿using TaskStatus = TaskManager.Core.Tasks.Enums.TaskStatus;
+﻿using TaskManager.Core.Tasks.Enums;
+using TaskStatus = TaskManager.Core.Tasks.Enums.TaskStatus;
 
 namespace TaskManager.Application.Tasks.DTOs;
 
@@ -8,6 +9,7 @@ public class TaskForUpdateDto
     public string? Name { get; set; }
     public string? Description { get; set; }
     public TaskStatus? Status { get; set; }
+    public TaskPriority? Priority { get; set; }
     public DateTimeOffset? Deadline { get; set; }
     public Guid? CategoryId { get; set; }
 }

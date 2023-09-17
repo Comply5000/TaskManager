@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using TaskManager.Core.Common.Requests;
+using TaskManager.Core.Tasks.Enums;
 using TaskManager.Shared.Responses;
 using TaskStatus = TaskManager.Core.Tasks.Enums.TaskStatus;
 
@@ -11,5 +12,6 @@ public sealed record CreateTask(
     string? Description,
     DateTimeOffset? Deadline,
     TaskStatus? Status,
+    TaskPriority Priority,
     Guid CategoryId,
     IFormFileCollection? Files) : IRequest<CreateOrUpdateResponse>, ITransactionalRequest;

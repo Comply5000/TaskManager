@@ -63,7 +63,7 @@ public sealed class IdentityService : IIdentityService
             throw new CreateUserException(createUser.Errors);
 
         #region Create default category
-        var defaultCategory = TaskCategory.Create(Globals.DefaultCategoryName, null);
+        var defaultCategory = TaskCategory.Create(Globals.DefaultCategoryName, null, null);
         defaultCategory.CreatedById = user.Id;
         defaultCategory.CreatedAt = _dateService.CurrentDate();
         await _context.TaskCategories.AddAsync(defaultCategory, cancellationToken);
@@ -89,8 +89,7 @@ public sealed class IdentityService : IIdentityService
     public async Task<JsonWebToken> SignIn(SignInDTO dto, CancellationToken cancellationToken)
     {
         var user = await _context.Users.AsNoTracking()
-                       .Where(x => (x.UserName == dto.EmailOrUserName || x.Email == dto.EmailOrUserName)
-                            && x.UserStatus == UserStatus.Active)
+                       .Where(x => x.UserName == dto.EmailOrUserName || x.Email == dto.EmailOrUserName)
                        .FirstOrDefaultAsync(cancellationToken)
                    ?? throw new InvalidCredentialsException();
         

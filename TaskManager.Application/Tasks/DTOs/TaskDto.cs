@@ -10,6 +10,7 @@ public sealed class TaskDto
     public string? Name { get; set; }
     public string? Description { get; set; }
     public BaseEnum? Status { get; set; }
+    public BaseEnum? Priority { get; set; }
     public DateTimeOffset? CreatedAt { get; set; }
     public DateTimeOffset? LastModifiedAt { get; set; }
     public DateTimeOffset? Deadline { get; set; }

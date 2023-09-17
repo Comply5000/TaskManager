@@ -11,7 +11,8 @@ internal static class Extensions
         {
             Id = taskCategory.Id,
             Name = taskCategory.Name,
-            Description = taskCategory.Description
+            Description = taskCategory.Description,
+            PageUrl = taskCategory.PageUrl
         };
     }
 }

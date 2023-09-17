@@ -12,5 +12,8 @@ public sealed class UpdateTaskCategoryValidator : AbstractValidator<UpdateTaskCa
 
         RuleFor(x => x.Description)
             .MaximumLength(50).WithMessage("Description max lenght is 50 characters");
+        
+        RuleFor(x => x.PageUrl)
+            .MaximumLength(300).WithMessage("Page URL max lenght is 300 characters");
     }
 }

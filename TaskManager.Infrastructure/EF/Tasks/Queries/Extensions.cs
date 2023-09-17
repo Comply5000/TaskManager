@@ -17,6 +17,7 @@ internal static class Extensions
             Name = task.Name,
             Description = task.Description,
             Status = task.Status,
+            Priority = task.Priority,
             Deadline = task.Deadline,
             CreatedAt = task.CreatedAt,
             LastModifiedAt = task.LastModifiedAt,
@@ -34,9 +35,9 @@ internal static class Extensions
             Name = task.Name,
             CategoryName = task.Category?.Name,
             Status = task.Status,
+            Priority = task.Priority,
             Deadline = task.Deadline,
             CreatedAt = task.CreatedAt,
-            LastModifiedAt = task.LastModifiedAt,
             IsLessThenDay = (task.Deadline < currentDate.AddDays(1)) && task.Status != TaskStatus.Finished && task.Deadline != null,
         };
     }
@@ -49,6 +50,7 @@ internal static class Extensions
             Name = task.Name,
             Description = task.Description,
             Status = task.Status,
+            Priority = task.Priority,
             Deadline = task.Deadline,
             CategoryId = task.CategoryId
         };

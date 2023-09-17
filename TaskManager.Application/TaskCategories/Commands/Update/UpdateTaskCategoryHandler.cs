@@ -25,7 +25,7 @@ public sealed class UpdateTaskCategoryHandler : IRequestHandler<UpdateTaskCatego
         var todoTaskCategory = await _taskCategoriesRepository.GetAsync(request.Id, cancellationToken)
                                ?? throw new TaskCategoryNotFoundException();
 
-        todoTaskCategory.Update(request.Name!, request.Description);
+        todoTaskCategory.Update(request.Name!, request.Description, request.PageUrl);
 
         var todoTaskCategoryId = await _taskCategoriesRepository.UpdateAsync(todoTaskCategory, cancellationToken);
 

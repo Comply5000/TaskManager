@@ -23,7 +23,7 @@ public sealed class CreateTaskCategoryHandler : IRequestHandler<CreateTaskCatego
         if (await _mediator.Send(new CheckIfCategoryWithNameExists(request.Name!), cancellationToken))
             throw new TaskCategoryWithNameExistsException();
         
-        var todoTaskCategory = TaskCategory.Create(request.Name!, request.Description);
+        var todoTaskCategory = TaskCategory.Create(request.Name!, request.Description, request.PageUrl);
 
         var todoTaskCategoryId = await _taskCategoriesRepository.AddAsync(todoTaskCategory, cancellationToken);
 

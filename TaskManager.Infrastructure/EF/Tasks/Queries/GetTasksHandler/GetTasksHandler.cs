@@ -35,6 +35,9 @@ public sealed class GetTasksHandler : IRequestHandler<GetTasks, GetTasksResponse
         
         if (request.Status is not null)
             query = query.Where(x => x.Status == request.Status);
+        
+        if (request.Priority is not null)
+            query = query.Where(x => x.Priority == request.Priority);
 
         if (request.OrderBy is not null)
         {

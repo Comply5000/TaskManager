@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using MediatR;
+using TaskManager.Core.Tasks.Enums;
 using TaskManager.Shared.Responses;
 using TaskStatus = TaskManager.Core.Tasks.Enums.TaskStatus;
 
@@ -10,6 +11,7 @@ public sealed record UpdateTask(
     string? Description,
     DateTimeOffset? Deadline,
     TaskStatus? Status,
+    TaskPriority? Priority,
     Guid CategoryId) : IRequest<CreateOrUpdateResponse>
 {
     [JsonIgnore] public Guid Id { get; set; }
