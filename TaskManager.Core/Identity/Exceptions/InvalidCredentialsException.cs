@@ -4,7 +4,7 @@ namespace TaskManager.Core.Identity.Exceptions;
 
 public sealed class InvalidCredentialsException : TaskManagerException
 {
-    public InvalidCredentialsException() : base("Invalid credentials exception")
+    public InvalidCredentialsException() : base("Invalid credentials")
     {
     }
 }

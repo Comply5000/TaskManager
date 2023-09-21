@@ -16,8 +16,7 @@ public static class IdentityExtension
         _config.GetSection("Authentication").Bind(authConfig);
 
         services.AddSingleton(authConfig);
-
-
+        
         ////Configure identity
         services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<EFContext>()
@@ -41,6 +40,9 @@ public static class IdentityExtension
 
             // User settings
             options.User.RequireUniqueEmail = true;
+
+            // Email confirm
+            options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
         });
 
 
@@ -76,6 +78,12 @@ public static class IdentityExtension
             options.ValidationInterval = TimeSpan.FromMinutes(30);
             options.OnRefreshingPrincipal = (context) => Task.CompletedTask;
         });
+        
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromHours(2); // Set the token lifespan to 2 days
+        });
+        
 
         return services;
     }

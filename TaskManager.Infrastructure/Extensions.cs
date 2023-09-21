@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TaskManager.Application.Shared.Common.Identity;
+using TaskManager.Core.Emails.Services;
 using TaskManager.Core.Files.Repositories;
 using TaskManager.Core.Files.Services;
 using TaskManager.Core.Identity.Services;
@@ -14,6 +15,7 @@ using TaskManager.Core.TaskCategories.Repositories;
 using TaskManager.Core.Tasks.Repositories;
 using TaskManager.Infrastructure.EF.Common.Decorators;
 using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.EF.Emails.Services;
 using TaskManager.Infrastructure.EF.Files.Repositories;
 using TaskManager.Infrastructure.EF.Files.Services;
 using TaskManager.Infrastructure.EF.Identity.Services;
@@ -41,6 +43,8 @@ public static class Extensions
         
         services.AddScoped<IFileRepository, FileRepository>();
         services.AddScoped<IFileStorageService, DatabaseFileStorage>();
+        
+        services.AddScoped<IEmailSenderService, SmtpSenderService>();
         
         services.AddDbContext<EFContext>(options =>
         {

@@ -8,6 +8,7 @@ using TaskManager.API.Filters;
 using TaskManager.Application;
 using TaskManager.Core;
 using TaskManager.Infrastructure;
+using TaskManager.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,8 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddApplication();
 builder.Services.AddCore();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+Globals.ApplicationUrl = builder.Configuration.GetValue<string>("ApplicationConfig:ApplicationUrl");
 
 var app = builder.Build();
 

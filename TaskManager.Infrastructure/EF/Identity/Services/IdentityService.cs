@@ -1,6 +1,9 @@
 ﻿using System.Security.Claims;
+using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TaskManager.Application.Emails.Events.ConfirmAccount;
 using TaskManager.Application.Shared.Common.Identity;
 using TaskManager.Core.Identity.DTOs;
 using TaskManager.Core.Identity.Entities;
@@ -25,8 +28,9 @@ public sealed class IdentityService : IIdentityService
     private readonly ITokenService _tokenService;
     private readonly SignInManager<User> _signInManager;
     private readonly IDateService _dateService;
+    private readonly IMediator _mediator;
 
-    public IdentityService(EFContext context, UserManager<User> userManager, RoleManager<Role> roleManager, ITokenService tokenService, SignInManager<User> signInManager, IDateService dateService)
+    public IdentityService(EFContext context, UserManager<User> userManager, RoleManager<Role> roleManager, ITokenService tokenService, SignInManager<User> signInManager, IDateService dateService, IMediator mediator)
     {
         _context = context;
         _userManager = userManager;
@@ -34,6 +38,7 @@ public sealed class IdentityService : IIdentityService
         _tokenService = tokenService;
         _signInManager = signInManager;
         _dateService = dateService;
+        _mediator = mediator;
     }
     
     public async Task SignUp(SignUpDTO dto, CancellationToken cancellationToken)
@@ -82,6 +87,9 @@ public sealed class IdentityService : IIdentityService
         if (!addNameClaimResult.Succeeded)
             throw new AddClaimException();
         
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        await _mediator.Publish(new ConfirmAccount(user.Email!, token, user.Id), cancellationToken);
+        
         await _context.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
@@ -92,11 +100,13 @@ public sealed class IdentityService : IIdentityService
                        .Where(x => x.UserName == dto.EmailOrUserName || x.Email == dto.EmailOrUserName)
                        .FirstOrDefaultAsync(cancellationToken)
                    ?? throw new InvalidCredentialsException();
-        
         var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
-        if(!result.Succeeded)
+        if (!result.Succeeded)
             throw new InvalidCredentialsException();
 
+        if (user.EmailConfirmed is false)
+            throw new UnauthorizedAccountException();
+                
         var roles = await _userManager.GetRolesAsync(user);
         var claims = await _userManager.GetClaimsAsync(user);
 
@@ -108,4 +118,14 @@ public sealed class IdentityService : IIdentityService
     }
 
     public async Task SignOut() => await _signInManager.SignOutAsync();
+    
+    public async Task ConfirmAccount(ConfirmAccountDto dto, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == dto.UserId, cancellationToken)
+            ?? throw new ConfirmAccountException();
+
+        var result = await _userManager.ConfirmEmailAsync(user, dto.Token);
+        if (!result.Succeeded)
+            throw new ConfirmAccountException();
+    }
 }

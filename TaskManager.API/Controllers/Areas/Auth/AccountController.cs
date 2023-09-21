@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Security.Principal;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.Shared.Common.Identity;
 using TaskManager.Core.Identity.DTOs;
@@ -9,6 +10,7 @@ using static Microsoft.IdentityModel.JsonWebTokens.JsonWebToken;
 namespace TaskManager.API.Controllers.Areas.Auth;
 
 [Route($"{Endpoints.BaseUrl}/account")]
+[AllowAnonymous]
 public class AccountController : BaseController
 {
     private readonly IIdentityService _identityService;
@@ -42,6 +44,15 @@ public class AccountController : BaseController
     public async Task<ActionResult<JsonWebToken>> SignOut(CancellationToken cancellationToken)
     {
         await _identityService.SignOut();
+        return Ok();
+    }
+    
+    [HttpPost("confirm-account")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<JsonWebToken>> ConfirmAccount(ConfirmAccountDto dto, CancellationToken cancellationToken)
+    {
+        await _identityService.ConfirmAccount(dto, cancellationToken);
         return Ok();
     }
 }
