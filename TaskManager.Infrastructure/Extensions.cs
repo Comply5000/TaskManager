@@ -35,7 +35,6 @@ public static class Extensions
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IDateService, DateService>();
-        services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService, TokenService>();
         
         services.AddScoped<ITaskCategoriesRepository, TaskCategoriesRepository>();
@@ -43,6 +42,7 @@ public static class Extensions
         
         services.AddScoped<IFileRepository, FileRepository>();
         services.AddScoped<IFileStorageService, DatabaseFileStorage>();
+        services.AddScoped<IFileSizeService, FileSizeService>();
         
         services.AddScoped<IEmailSenderService, SmtpSenderService>();
         

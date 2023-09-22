@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
+using TaskManager.Core.Identity.DTOs;
 
-namespace TaskManager.Core.Identity.DTOs;
+namespace TaskManager.Application.Identity.Commands.SignIn;
 
-public sealed record SignInDTO(string? EmailOrUserName, string? Password);
-
-public sealed class SignInDTOValidator : AbstractValidator<SignInDTO>
+public sealed class SignInValidator : AbstractValidator<SignIn>
 {
-    public SignInDTOValidator()
+    public SignInValidator()
     {
         RuleFor(x => x.EmailOrUserName).NotEmpty().WithMessage("User name or email is required");
         RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required");

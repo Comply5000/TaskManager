@@ -23,6 +23,7 @@ internal static class Extensions
             LastModifiedAt = task.LastModifiedAt,
             IsLessThenDay = (task.Deadline < currentDate.AddDays(1)) && task.Status != TaskStatus.Finished && task.Deadline != null,
             Category = task.Category.AsTaskCategoryDto(),
+            FilesSize = Math.Round(task.Files.Sum(x => x.TotalBytes) / 1048576.0, 1),
             Files = task.Files.Select(x => x.AsFileDto()).ToList()
         };
     }

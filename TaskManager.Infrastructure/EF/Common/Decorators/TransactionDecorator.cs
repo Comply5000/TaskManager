@@ -1,12 +1,20 @@
 ﻿using System.Transactions;
 using MediatR;
 using TaskManager.Core.Common.Requests;
+using TaskManager.Infrastructure.EF.Context;
 
 namespace TaskManager.Infrastructure.EF.Common.Decorators;
 
 public class TransactionDecorator<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    private readonly EFContext _context;
+
+    public TransactionDecorator(EFContext context)
+    {
+        _context = context;
+    }
+    
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         if (request is ITransactionalRequest)
@@ -15,6 +23,8 @@ public class TransactionDecorator<TRequest, TResponse> : IPipelineBehavior<TRequ
             try
             {
                 var response = await next();
+
+                await _context.SaveChangesAsync(cancellationToken);
 
                 scope.Complete();
 

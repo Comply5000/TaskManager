@@ -12,18 +12,19 @@ public sealed class UploadFileHandler : IRequestHandler<UploadFile, UploadFileRe
 {
     private readonly IFileRepository _fileRepository;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IFileSizeService _fileSizeService;
 
-    public UploadFileHandler(IFileRepository fileRepository, IFileStorageService fileStorageService)
+    public UploadFileHandler(IFileRepository fileRepository, IFileStorageService fileStorageService, IFileSizeService fileSizeService)
     {
         _fileRepository = fileRepository;
         _fileStorageService = fileStorageService;
+        _fileSizeService = fileSizeService;
     }
     
     public async Task<UploadFileResponse> Handle(UploadFile request, CancellationToken cancellationToken)
     {
-        if (request.File.Length > Globals.MaxFileSize)
-            throw new InvalidFileSizeException();
-
+        await _fileSizeService.CheckMaxFilesSize(request.File.Length, request.TaskId, cancellationToken);
+        
         var fileUploadResult = await _fileStorageService.UploadAsync(request.File, cancellationToken);
 
         var file = new SystemFile

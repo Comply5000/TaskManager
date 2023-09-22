@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManager.API.Attributes;
-using TaskManager.Application.Emails.Events.ConfirmAccount;
 using TaskManager.Application.Files.Commands.DeleteFile;
 using TaskManager.Application.Files.Commands.UploadFile;
 using TaskManager.Application.Files.Queries.DownloadFile;

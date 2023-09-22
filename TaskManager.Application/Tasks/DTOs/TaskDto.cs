@@ -16,6 +16,7 @@ public sealed class TaskDto
     public DateTimeOffset? Deadline { get; set; }
     public bool IsLessThenDay { get; set; }
     public TaskCategoryDto? Category { get; set; }
+    public double FilesSize { get; set; }
     public List<FileDto> Files { get; set; }
     
 }
