@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using TaskManager.Core.Identity.Exceptions;
 using TaskManager.Infrastructure.EF.Context;
 using TaskManager.Shared.Abstractions.Exceptions;
 using TaskManager.Shared.Exceptions;
@@ -18,6 +19,7 @@ public sealed class ApiExceptionFilter : ExceptionFilterAttribute
             { typeof(IdentityErrorException), HandleIdentityException },
             { typeof(UserLockedOutException), HandleUserLockoutException },
             { typeof(CreateUserException), HandleCreateUserException },
+            { typeof(ChangePasswordException), HandleChangePasswordException },
             { typeof(EFContext), HandleNetCoreTemplateException }
         };
     }
@@ -136,6 +138,20 @@ public sealed class ApiExceptionFilter : ExceptionFilterAttribute
         var exception = context.Exception as CreateUserException;
 
 
+        var details = new ValidationProblemDetails(exception?.Errors)
+        {
+            Title = exception?.Message
+        };
+
+        context.Result = new BadRequestObjectResult(details);
+
+        context.ExceptionHandled = true;
+    }
+    
+    private void HandleChangePasswordException(ExceptionContext context)
+    {
+        var exception = context.Exception as ChangePasswordException;
+        
         var details = new ValidationProblemDetails(exception?.Errors)
         {
             Title = exception?.Message

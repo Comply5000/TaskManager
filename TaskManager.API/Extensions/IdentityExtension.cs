@@ -40,6 +40,7 @@ public static class IdentityExtension
 
             // User settings
             options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedEmail = true;
 
             // Email confirm
             options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;

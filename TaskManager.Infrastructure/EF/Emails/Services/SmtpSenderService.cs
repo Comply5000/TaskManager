@@ -22,7 +22,7 @@ public sealed class SmtpSenderService : IEmailSenderService
         var smtpConfig = new SmtpConfig();
         _configuration.GetSection("SMTP").Bind(smtpConfig);
         
-        var emailMessage = CreateEmailMessage(email, subject, textBody, smtpConfig.SmtpSenderMail);
+        var emailMessage = CreateEmailMessage(email, subject, textBody, smtpConfig);
         using var client = new SmtpClient();
         {
             await client.ConnectAsync(smtpConfig.SmtpUrl, smtpConfig.SmtpPort,false);
@@ -33,10 +33,10 @@ public sealed class SmtpSenderService : IEmailSenderService
         }
     }
     
-    private MimeMessage CreateEmailMessage(string email, string subject, string textBody, string sender)
+    private MimeMessage CreateEmailMessage(string email, string subject, string textBody, SmtpConfig smtpConfig)
     {
         var emailMessage = new MimeMessage();
-        emailMessage.From.Add(new MailboxAddress("", sender));
+        emailMessage.From.Add(new MailboxAddress(smtpConfig.SmtpSenderName, smtpConfig.SmtpSenderMail));
         emailMessage.To.Add(new MailboxAddress("", email));
         emailMessage.Subject = subject;
         

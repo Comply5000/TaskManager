@@ -7,4 +7,5 @@ public class SmtpConfig
     public string SmtpLogin { get; set; }
     public string SmtpPassword { get; set; }
     public string SmtpSenderMail { get; set; }
+    public string SmtpSenderName { get; set; }
 }

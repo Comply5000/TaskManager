@@ -3,7 +3,9 @@ using System.Security.Principal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.Emails.Events.ConfirmAccountEmail;
+using TaskManager.Application.Emails.Events.ResetPasswordEmail;
 using TaskManager.Application.Identity.Commands.ConfirmAccount;
+using TaskManager.Application.Identity.Commands.ResetPassword;
 using TaskManager.Application.Identity.Commands.SignIn;
 using TaskManager.Application.Identity.Commands.SignUp;
 using TaskManager.Application.Shared.Common.Identity;
@@ -44,4 +46,23 @@ public class AccountController : BaseController
         await Mediator.Send(command, cancellationToken);
         return Ok();
     }
+    
+    [HttpPost("send-reset-password-email")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SendResetPasswordEmail(ResetPasswordEmail command, CancellationToken cancellationToken)
+    {
+        await Mediator.Publish(command, cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword(ResetPassword command, CancellationToken cancellationToken)
+    {
+        await Mediator.Send(command, cancellationToken);
+        return Ok();
+    }
+    
 }

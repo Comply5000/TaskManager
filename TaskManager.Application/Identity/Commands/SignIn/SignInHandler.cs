@@ -23,18 +23,15 @@ public sealed class SignInHandler : IRequestHandler<SignIn, JsonWebToken>
     
     public async Task<JsonWebToken> Handle(SignIn request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.Users.AsNoTracking()
-                       .Where(x => x.UserName == request.EmailOrUserName || x.Email == request.EmailOrUserName)
-                       .FirstOrDefaultAsync(cancellationToken)
+        var user = await _userManager.Users
+                    .Where(x => x.UserName == request.EmailOrUserName || x.Email == request.EmailOrUserName)
+                    .FirstOrDefaultAsync(cancellationToken) 
                    ?? throw new InvalidCredentialsException();
         
-        var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+        var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, true);
         if (!result.Succeeded)
-            throw new InvalidCredentialsException();
+             throw new SignInException(result);
 
-        if (user.EmailConfirmed is false)
-            throw new UnauthorizedAccountException();
-                
         var roles = await _userManager.GetRolesAsync(user);
         var claims = await _userManager.GetClaimsAsync(user);
 
