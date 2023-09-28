@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Serilog;
 using TaskManager.API.Common.ResponseModels;
 using TaskManager.API.Extensions;
 using TaskManager.API.Filters;
@@ -44,6 +45,9 @@ builder.Services.Configure<ApiBehaviorOptions>(opt =>
     };
 });
 
+// builder.Host.UseSerilog((context, configuration) =>
+//     configuration.ReadFrom.Configuration(context.Configuration));
+
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddIdentityConfig(builder.Configuration);
 builder.Services.AddHttpClient();
@@ -65,6 +69,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//app.UseSerilogRequestLogging();
 
 app.Use(async (context, next) =>
 {

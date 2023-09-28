@@ -13,7 +13,7 @@ using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Core.TaskCategories.Repositories;
 using TaskManager.Core.Tasks.Repositories;
-using TaskManager.Infrastructure.EF.Common.Decorators;
+using TaskManager.Infrastructure.EF.Common.PipelineBehaviors;
 using TaskManager.Infrastructure.EF.Context;
 using TaskManager.Infrastructure.EF.Emails.Services;
 using TaskManager.Infrastructure.EF.Files.Repositories;
@@ -30,7 +30,9 @@ public static class Extensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionDecorator<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionPipelineBehavior<,>));
+        //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
+        
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();

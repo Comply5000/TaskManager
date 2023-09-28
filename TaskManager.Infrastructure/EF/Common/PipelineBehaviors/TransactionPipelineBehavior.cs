@@ -3,14 +3,14 @@ using MediatR;
 using TaskManager.Core.Common.Requests;
 using TaskManager.Infrastructure.EF.Context;
 
-namespace TaskManager.Infrastructure.EF.Common.Decorators;
+namespace TaskManager.Infrastructure.EF.Common.PipelineBehaviors;
 
-public class TransactionDecorator<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+public sealed class TransactionPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+    where TRequest : notnull
 {
     private readonly EFContext _context;
 
-    public TransactionDecorator(EFContext context)
+    public TransactionPipelineBehavior(EFContext context)
     {
         _context = context;
     }

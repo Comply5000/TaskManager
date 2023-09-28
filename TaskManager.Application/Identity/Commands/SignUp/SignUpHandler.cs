@@ -17,7 +17,7 @@ using TaskManager.Shared.Responses;
 
 namespace TaskManager.Application.Identity.Commands.SignUp;
 
-public sealed class SignUpHandler : IRequestHandler<SignUp, Unit>
+public sealed class SignUpHandler : IRequestHandler<SignUp>
 {
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
@@ -36,7 +36,7 @@ public sealed class SignUpHandler : IRequestHandler<SignUp, Unit>
         _mediator = mediator;
     }
     
-    public async Task<Unit> Handle(SignUp request, CancellationToken cancellationToken)
+    public async Task Handle(SignUp request, CancellationToken cancellationToken)
     {
         var userEmailIsNotUnique = await _userManager.Users.AnyAsync(x => x.Email == request.Email, cancellationToken);
 
@@ -81,8 +81,5 @@ public sealed class SignUpHandler : IRequestHandler<SignUp, Unit>
         
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         await _mediator.Publish(new ConfirmAccountEmail(user.Email!, token, user.Id), cancellationToken);
-
-        return new Unit();
-
     }
 }
