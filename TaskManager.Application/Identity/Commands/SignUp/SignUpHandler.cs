@@ -52,7 +52,7 @@ public sealed class SignUpHandler : IRequestHandler<SignUp>
         {
             UserName = request.UserName,
             Email = request.Email,
-            UserStatus = UserStatus.Unauthorized
+            UserStatus = UserStatus.Active
         };
         
         var createUser = await _userManager.CreateAsync(user, request.Password!);

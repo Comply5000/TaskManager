@@ -2,22 +2,25 @@
 using System.Security.Principal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TaskManager.API.Attributes;
 using TaskManager.Application.Emails.Events.ConfirmAccountEmail;
 using TaskManager.Application.Emails.Events.ResetPasswordEmail;
+using TaskManager.Application.Identity.Commands.ChangePassword;
 using TaskManager.Application.Identity.Commands.ConfirmAccount;
 using TaskManager.Application.Identity.Commands.ResetPassword;
 using TaskManager.Application.Identity.Commands.SignIn;
 using TaskManager.Application.Identity.Commands.SignUp;
+using TaskManager.Application.Identity.Queries.MyAccountData;
 using TaskManager.Application.Shared.Common.Identity;
 using TaskManager.Core.Identity.DTOs;
 using TaskManager.Core.Identity.Services;
+using TaskManager.Core.Identity.Static;
 using TaskManager.Shared.Responses;
 using static Microsoft.IdentityModel.JsonWebTokens.JsonWebToken;
 
 namespace TaskManager.API.Controllers.Areas.Auth;
 
 [Route($"{Endpoints.BaseUrl}/account")]
-[AllowAnonymous]
 public class AccountController : BaseController
 {
     [HttpPost("sign-up")]
@@ -65,4 +68,23 @@ public class AccountController : BaseController
         return Ok();
     }
     
+    [HttpPut("change-password")]
+    [ApiAuthorize(Roles = UserRoles.User)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ChangePassword(ChangePassword command, CancellationToken cancellationToken)
+    {
+        await Mediator.Send(command, cancellationToken);
+        return Ok();
+    }
+    
+    [HttpGet("my-account-data")]
+    [ApiAuthorize(Roles = UserRoles.User)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<MyAccountDataResponse>> MyAccountData(CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new MyAccountData(), cancellationToken);
+        return OkOrNotFound(result);
+    }
 }
