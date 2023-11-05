@@ -10,15 +10,15 @@ namespace TaskManager.Infrastructure.EF.Files.Configurations;
 
 public sealed class FileConfiguration : IEntityTypeConfiguration<SystemFile>
 {
-    private readonly EFContext _context;
+    private readonly Guid _userId;
 
-    public FileConfiguration(EFContext context)
+    public FileConfiguration(Guid userId)
     {
-        _context = context;
+        _userId = userId;
     }
     
     public void Configure(EntityTypeBuilder<SystemFile> builder)
     {
-        builder.HasQueryFilter(x => x.EntryStatus != EntryStatus.Deleted && x.CreatedById == Guid.Parse(_context._userId));
+        builder.HasQueryFilter(x => x.EntryStatus != EntryStatus.Deleted && x.CreatedById == _userId);
     }
 }

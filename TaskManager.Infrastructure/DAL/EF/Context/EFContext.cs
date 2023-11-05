@@ -23,13 +23,15 @@ public class EFContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole
     public DbSet<TaskCategory> TaskCategories { get; set; }
     public DbSet<SystemFile> Files { get; set; }
 
-    public readonly string _userId;
+    private readonly Guid _userId = Guid.Empty;
     
     public EFContext(DbContextOptions<EFContext> options) : base(options) {}
     
     public EFContext(DbContextOptions<EFContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
     {
-        _userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        //_userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        _ = Guid.TryParse(httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier),
+            out _userId);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,9 +51,9 @@ public class EFContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole
 
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        modelBuilder.ApplyConfiguration(new TaskConfiguration(this));
-        modelBuilder.ApplyConfiguration(new TaskCategoryConfiguration(this));
-        modelBuilder.ApplyConfiguration(new FileConfiguration(this));
+        modelBuilder.ApplyConfiguration(new TaskConfiguration(_userId));
+        modelBuilder.ApplyConfiguration(new TaskCategoryConfiguration(_userId));
+        modelBuilder.ApplyConfiguration(new FileConfiguration(_userId));
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
@@ -63,21 +65,21 @@ public class EFContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole
                 {
                     case EntityState.Added:
                         if (entry.CurrentValues["CreatedById"] is Guid createdById && createdById == Guid.Empty)
-                            entry.CurrentValues["CreatedById"] = Guid.Parse(_userId);
+                            entry.CurrentValues["CreatedById"] = _userId;
                         if (entry.CurrentValues["CreatedAt"] is DateTimeOffset createdAt && createdAt == DateTimeOffset.MinValue)
                             entry.CurrentValues["CreatedAt"] = DateTimeOffset.UtcNow;
                         entry.CurrentValues["EntryStatus"] = EntryStatus.Active;
                         break;
 
                     case EntityState.Modified:
-                        entry.CurrentValues["LastModifiedById"] = Guid.Parse(_userId);
+                        entry.CurrentValues["LastModifiedById"] = _userId;
                         entry.CurrentValues["LastModifiedAt"] = DateTimeOffset.UtcNow;
                         break;
 
                     case EntityState.Deleted:
-                        entry.CurrentValues["LastModifiedById"] = Guid.Parse(_userId);
+                        entry.CurrentValues["LastModifiedById"] = _userId;
                         entry.CurrentValues["LastModifiedAt"] = DateTimeOffset.UtcNow;
-                        entry.CurrentValues["InactivatedById"] = Guid.Parse(_userId);
+                        entry.CurrentValues["InactivatedById"] = _userId;
                         entry.CurrentValues["InactivatedAt"] = DateTimeOffset.UtcNow;
                         entry.CurrentValues["EntryStatus"] = EntryStatus.Deleted;
                         entry.State = EntityState.Modified;

@@ -20,7 +20,7 @@ public sealed class ApiExceptionFilter : ExceptionFilterAttribute
             { typeof(UserLockedOutException), HandleUserLockoutException },
             { typeof(CreateUserException), HandleCreateUserException },
             { typeof(ChangePasswordException), HandleChangePasswordException },
-            { typeof(EFContext), HandleNetCoreTemplateException }
+            { typeof(ForbiddenAccessException), HandleForbiddenAccessException }
         };
     }
     
@@ -43,12 +43,6 @@ public sealed class ApiExceptionFilter : ExceptionFilterAttribute
         if (!context.ModelState.IsValid)
         {
             HandleInvalidModelStateException(context);
-            return;
-        }
-
-        if (context.Exception is ForbiddenAccessException)
-        {
-            HandleForbiddenAccessException(context);
             return;
         }
 
@@ -77,13 +71,6 @@ public sealed class ApiExceptionFilter : ExceptionFilterAttribute
 
     private void HandleForbiddenAccessException(ExceptionContext context)
     {
-        var exception = context.Exception as TaskManagerException;
-
-        var details = new ProblemDetails()
-        {
-            Title = exception?.Message
-        };
-
         context.Result = new ForbidResult();
 
         context.ExceptionHandled = true;

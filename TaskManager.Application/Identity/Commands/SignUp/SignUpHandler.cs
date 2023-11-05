@@ -78,7 +78,7 @@ public sealed class SignUpHandler : IRequestHandler<SignUp>
         var addNameClaimResult = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
         if (!addNameClaimResult.Succeeded)
             throw new AddClaimException();
-        
+
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         await _mediator.Publish(new ConfirmAccountEmail(user.Email!, token, user.Id), cancellationToken);
     }

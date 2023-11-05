@@ -5,6 +5,7 @@ using TaskManager.Application.Shared.Common.Identity;
 using TaskManager.Core.Identity.DTOs;
 using TaskManager.Core.Identity.Entities;
 using TaskManager.Core.Identity.Exceptions;
+using TaskManager.Shared.Exceptions;
 
 namespace TaskManager.Application.Identity.Commands.SignIn;
 
@@ -29,8 +30,10 @@ public sealed class SignInHandler : IRequestHandler<SignIn, JsonWebToken>
                    ?? throw new InvalidCredentialsException();
         
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, true);
+        // if (result.IsLockedOut)
+        //     throw new UserLockedOutException(user.Id, user.LockoutEnd, "jakieś info");
         if (!result.Succeeded)
-             throw new SignInException(result);
+            throw new SignInException(result);
 
         var roles = await _userManager.GetRolesAsync(user);
         var claims = await _userManager.GetClaimsAsync(user);

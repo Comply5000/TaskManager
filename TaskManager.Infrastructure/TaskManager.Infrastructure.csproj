@@ -37,4 +37,8 @@
       <ProjectReference Include="..\TaskManager.Shared\TaskManager.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="DAL\EF\" />
+    </ItemGroup>
+
 </Project>

@@ -4,29 +4,29 @@ using Microsoft.Extensions.Configuration;
 using MimeKit;
 using TaskManager.Core.Emails.Configuration;
 using TaskManager.Core.Emails.Services;
+using TaskManager.Infrastructure.Integrations.Email.Configuration;
 
 namespace TaskManager.Infrastructure.EF.Emails.Services;
 
 public sealed class SmtpSenderService : IEmailSenderService
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfigurationSmtp _configurationSmtp;
+    private SmtpConfig _emailConfig;
 
-    public SmtpSenderService(IConfiguration configuration)
+    public SmtpSenderService(IConfigurationSmtp configurationSmtp)
     {
-        _configuration = configuration;
-        
+        _configurationSmtp = configurationSmtp;
     }
     
     public async Task<SentEmailDTO> SendEmailAsync(string email, string subject, string textBody)
     {
-        var smtpConfig = new SmtpConfig();
-        _configuration.GetSection("SMTP").Bind(smtpConfig);
+        _emailConfig = _configurationSmtp.ReturnEmailConfiguration();
         
-        var emailMessage = CreateEmailMessage(email, subject, textBody, smtpConfig);
+        var emailMessage = CreateEmailMessage(email, subject, textBody, _emailConfig);
         using var client = new SmtpClient();
         {
-            await client.ConnectAsync(smtpConfig.SmtpUrl, smtpConfig.SmtpPort,false);
-            await client.AuthenticateAsync(smtpConfig.SmtpLogin, smtpConfig.SmtpPassword);
+            await client.ConnectAsync(_emailConfig.SmtpUrl, _emailConfig.SmtpPort,false);
+            await client.AuthenticateAsync(_emailConfig.SmtpLogin, _emailConfig.SmtpPassword);
             var status = await client.SendAsync(emailMessage);
             await client.DisconnectAsync(true);
             return new SentEmailDTO(email);

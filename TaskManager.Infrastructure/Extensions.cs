@@ -22,6 +22,7 @@ using TaskManager.Infrastructure.EF.Identity.Services;
 using TaskManager.Infrastructure.EF.Shared.Services;
 using TaskManager.Infrastructure.EF.TaskCategories.Repositories;
 using TaskManager.Infrastructure.EF.Tasks.Repositories;
+using TaskManager.Infrastructure.Integrations.Email.Configuration;
 
 namespace TaskManager.Infrastructure;
 
@@ -32,8 +33,9 @@ public static class Extensions
         services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionPipelineBehavior<,>));
         //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
-        
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton<IConfigurationSmtp, ConfigurationSmtp>();
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IDateService, DateService>();
