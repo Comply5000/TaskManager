@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskManager.Core.Emails.Services;
 using TaskManager.Core.Identity.Entities;
 using TaskManager.Core.Identity.Exceptions;
+using TaskManager.Core.Identity.Services;
 using TaskManager.Shared;
 
 namespace TaskManager.Application.Emails.Events.ResetPasswordEmail;
@@ -11,24 +12,19 @@ namespace TaskManager.Application.Emails.Events.ResetPasswordEmail;
 public sealed class ResetPasswordEmailHandler : INotificationHandler<ResetPasswordEmail>
 {
     private readonly IEmailSenderService _emailSenderService;
-    private readonly UserManager<User> _userManager;
+    private readonly IIdentityService _identityService;
 
-    public ResetPasswordEmailHandler(IEmailSenderService emailSenderService, UserManager<User> userManager)
+    public ResetPasswordEmailHandler(IEmailSenderService emailSenderService, IIdentityService identityService)
     {
         _emailSenderService = emailSenderService;
-        _userManager = userManager;
+        _identityService = identityService;
     }
     
     public async Task Handle(ResetPasswordEmail notification, CancellationToken cancellationToken)
     {
-        var user = await _userManager.Users.AsNoTracking()
-                       .Where(x => x.Email == notification.Email)
-                       .FirstOrDefaultAsync(cancellationToken)
-                   ?? throw new UserWithEmailDoesntExistException();
-
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var response = await _identityService.GeneratePasswordResetTokenAsync(notification.Email, cancellationToken);
         
-        var link = SetUrl(token, user.Id);
+        var link = SetUrl(response.Token, response.UserId);
         var message = "Click link bellow reset your password" + Environment.NewLine + link;
         
         await _emailSenderService.SendEmailAsync(notification.Email, "Reset password", message);

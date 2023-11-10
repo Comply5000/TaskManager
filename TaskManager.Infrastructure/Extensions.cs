@@ -13,6 +13,7 @@ using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Core.TaskCategories.Repositories;
 using TaskManager.Core.Tasks.Repositories;
+using TaskManager.Infrastructure.DAL.Identity.Services;
 using TaskManager.Infrastructure.EF.Common.PipelineBehaviors;
 using TaskManager.Infrastructure.EF.Context;
 using TaskManager.Infrastructure.EF.Emails.Services;
@@ -49,6 +50,7 @@ public static class Extensions
         services.AddScoped<IFileSizeService, FileSizeService>();
         
         services.AddScoped<IEmailSenderService, SmtpSenderService>();
+        services.AddScoped<IIdentityService, IdentityService>();
         
         services.AddDbContext<EFContext>(options =>
         {

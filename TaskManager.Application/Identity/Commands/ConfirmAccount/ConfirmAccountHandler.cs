@@ -3,25 +3,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Core.Identity.Entities;
 using TaskManager.Core.Identity.Exceptions;
+using TaskManager.Core.Identity.Services;
 
 namespace TaskManager.Application.Identity.Commands.ConfirmAccount;
 
 public sealed class ConfirmAccountHandler : IRequestHandler<ConfirmAccount>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IIdentityService _identityService;
 
-    public ConfirmAccountHandler(UserManager<User> userManager)
+    public ConfirmAccountHandler(IIdentityService identityService)
     {
-        _userManager = userManager;
+        _identityService = identityService;
     }
     
     public async Task Handle(ConfirmAccount request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken)
-                   ?? throw new ConfirmAccountException();
-
-        var result = await _userManager.ConfirmEmailAsync(user, request.Token);
-        if (!result.Succeeded)
-            throw new ConfirmAccountException();
+        await _identityService.ConfirmAccount(request.UserId, request.Token, cancellationToken);
     }
 }
