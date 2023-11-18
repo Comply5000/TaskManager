@@ -55,7 +55,7 @@ public sealed class GetTasksHandler : IRequestHandler<GetTasks, GetTasksResponse
             }
         }
 
-        var currentDate = _dateService.CurrentDate();
+        var currentDate = _dateService.CurrentOffsetDate();
         
         var tasks = await query
             .Select(x => x.AsTaskForListDto(currentDate))

@@ -64,7 +64,7 @@ public sealed class IdentityService : IIdentityService
         #region Create default category
         var defaultCategory = TaskCategory.Create(Globals.DefaultCategoryName, null, null);
         defaultCategory.CreatedById = user.Id;
-        defaultCategory.CreatedAt = _dateService.CurrentDate();
+        defaultCategory.CreatedAt = _dateService.CurrentOffsetDate();
         await _context.AddAsync(defaultCategory, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         #endregion

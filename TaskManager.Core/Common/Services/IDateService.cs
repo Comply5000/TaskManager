@@ -2,5 +2,6 @@
 
 public interface IDateService
 {
+    DateTimeOffset CurrentOffsetDate();
     DateTime CurrentDate();
 }

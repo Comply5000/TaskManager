@@ -19,7 +19,7 @@ public sealed class GetTaskHandler : IRequestHandler<GetTask, GetTaskResponse?>
     
     public async Task<GetTaskResponse?> Handle(GetTask request, CancellationToken cancellationToken)
     {
-        var currentDate = _dateService.CurrentDate();
+        var currentDate = _dateService.CurrentOffsetDate();
         
         var todoTask = await _context.Tasks.AsNoTracking()
             .Where(x => x.Id == request.Id)
