@@ -9,15 +9,15 @@ namespace TaskManager.Infrastructure.EF.TaskCategories.Configurations;
 
 public sealed class TaskCategoryConfiguration : IEntityTypeConfiguration<TaskCategory>
 {
-    private readonly Guid _userId;
+    private readonly EFContext _context;
 
-    public TaskCategoryConfiguration(Guid userId)
+    public TaskCategoryConfiguration(EFContext context)
     {
-        _userId = userId;
+        _context = context;
     }
     
     public void Configure(EntityTypeBuilder<TaskCategory> builder)
     {
-        builder.HasQueryFilter(x => x.EntryStatus != EntryStatus.Deleted && x.CreatedById == _userId);
+        builder.HasQueryFilter(x => x.EntryStatus != EntryStatus.Deleted && x.CreatedById == _context._userId);
     }
 }

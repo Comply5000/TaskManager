@@ -9,11 +9,11 @@ namespace TaskManager.Infrastructure.EF.Tasks.Configurations;
 
 public class TaskConfiguration : IEntityTypeConfiguration<TaskModel>
 {
-    private readonly Guid _userId;
+    private readonly EFContext _context;
 
-    public TaskConfiguration(Guid userId)
+    public TaskConfiguration(EFContext context)
     {
-        _userId = userId;
+        _context = context;
     }
     
     public void Configure(EntityTypeBuilder<TaskModel> builder)
@@ -23,6 +23,6 @@ public class TaskConfiguration : IEntityTypeConfiguration<TaskModel>
             .WithOne(x => x.Task)
             .OnDelete(DeleteBehavior.Cascade);
         
-        builder.HasQueryFilter(x => x.EntryStatus != EntryStatus.Deleted && x.CreatedById == _userId);
+        builder.HasQueryFilter(x => x.EntryStatus != EntryStatus.Deleted && x.CreatedById == _context._userId);
     }
 }

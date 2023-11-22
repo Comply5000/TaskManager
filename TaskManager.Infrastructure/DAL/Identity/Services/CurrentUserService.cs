@@ -3,25 +3,33 @@ using Microsoft.AspNetCore.Http;
 using TaskManager.Core.Identity.Services;
 using TaskManager.Infrastructure.EF.Context;
 
-namespace TaskManager.Infrastructure.EF.Identity.Services;
+namespace TaskManager.Infrastructure.DAL.Identity.Services;
 
 public class CurrentUserService : ICurrentUserService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly string _userId;
-    private readonly ClaimsPrincipal _user;
-    private readonly EFContext _context;
-    
-    public CurrentUserService(IHttpContextAccessor httpContextAccessor, EFContext context)
+
+    public CurrentUserService(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
-        _userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-        _user = _httpContextAccessor?.HttpContext?.User;
-        _context = context;
     }
-    
-    public Guid UserId => new(_userId);
 
+    public Guid UserId => GetClaimAsGuid(ClaimTypes.NameIdentifier, _httpContextAccessor);
     public string Email 
         => _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
+    
+    private static Guid GetClaimAsGuid(string claimType, IHttpContextAccessor httpContextAccessor)
+    {
+        var claimAsString = httpContextAccessor?.HttpContext?.User.FindFirstValue(claimType);
+
+        if (string.IsNullOrWhiteSpace(claimAsString))
+            return Guid.Empty;
+
+        var parseResultSuccessful = Guid.TryParse(claimAsString, out var claimId);
+
+        if (!parseResultSuccessful || claimId == Guid.Empty)
+            return Guid.Empty;
+
+        return claimId;
+    }
 }

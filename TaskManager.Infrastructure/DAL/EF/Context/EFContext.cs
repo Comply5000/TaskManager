@@ -23,7 +23,7 @@ public class EFContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole
     public DbSet<TaskCategory> TaskCategories { get; set; }
     public DbSet<SystemFile> Files { get; set; }
 
-    private readonly Guid _userId = Guid.Empty;
+    public readonly Guid _userId;
     
     public EFContext(DbContextOptions<EFContext> options) : base(options) {}
     
@@ -51,9 +51,9 @@ public class EFContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole
 
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        modelBuilder.ApplyConfiguration(new TaskConfiguration(_userId));
-        modelBuilder.ApplyConfiguration(new TaskCategoryConfiguration(_userId));
-        modelBuilder.ApplyConfiguration(new FileConfiguration(_userId));
+        modelBuilder.ApplyConfiguration(new TaskConfiguration(this));
+        modelBuilder.ApplyConfiguration(new TaskCategoryConfiguration(this));
+        modelBuilder.ApplyConfiguration(new FileConfiguration(this));
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
