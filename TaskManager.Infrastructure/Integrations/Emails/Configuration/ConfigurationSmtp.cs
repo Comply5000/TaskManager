@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
-using TaskManager.Core.Emails.Configuration;
 
-namespace TaskManager.Infrastructure.Integrations.Email.Configuration;
+namespace TaskManager.Infrastructure.Integrations.Emails.Configuration;
 
 public sealed class ConfigurationSmtp : IConfigurationSmtp
 {

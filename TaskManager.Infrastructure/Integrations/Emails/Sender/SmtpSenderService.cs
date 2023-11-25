@@ -1,12 +1,9 @@
 ﻿using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.Extensions.Configuration;
 using MimeKit;
-using TaskManager.Core.Emails.Configuration;
 using TaskManager.Core.Emails.Services;
-using TaskManager.Infrastructure.Integrations.Email.Configuration;
+using TaskManager.Infrastructure.Integrations.Emails.Configuration;
 
-namespace TaskManager.Infrastructure.EF.Emails.Services;
+namespace TaskManager.Infrastructure.Integrations.Emails.Sender;
 
 public sealed class SmtpSenderService : IEmailSenderService
 {

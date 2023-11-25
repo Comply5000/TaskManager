@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Core.Emails.Configuration;
+﻿namespace TaskManager.Infrastructure.Integrations.Emails.Configuration;
 
 public class SmtpConfig
 {

@@ -16,14 +16,14 @@ using TaskManager.Core.Tasks.Repositories;
 using TaskManager.Infrastructure.DAL.Identity.Services;
 using TaskManager.Infrastructure.EF.Common.PipelineBehaviors;
 using TaskManager.Infrastructure.EF.Context;
-using TaskManager.Infrastructure.EF.Emails.Services;
 using TaskManager.Infrastructure.EF.Files.Repositories;
 using TaskManager.Infrastructure.EF.Files.Services;
 using TaskManager.Infrastructure.EF.Identity.Services;
 using TaskManager.Infrastructure.EF.Shared.Services;
 using TaskManager.Infrastructure.EF.TaskCategories.Repositories;
 using TaskManager.Infrastructure.EF.Tasks.Repositories;
-using TaskManager.Infrastructure.Integrations.Email.Configuration;
+using TaskManager.Infrastructure.Integrations.Emails.Configuration;
+using TaskManager.Infrastructure.Integrations.Emails.Sender;
 
 namespace TaskManager.Infrastructure;
 
