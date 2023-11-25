@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using TaskManager.Core.Common.Requests;
 using TaskManager.Core.Tasks.Enums;
+using TaskManager.Shared.Requests;
 using TaskManager.Shared.Responses;
 using TaskStatus = TaskManager.Core.Tasks.Enums.TaskStatus;
 

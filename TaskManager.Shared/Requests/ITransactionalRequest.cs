@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Core.Common.Requests;
+﻿namespace TaskManager.Shared.Requests;
 
 public interface ITransactionalRequest
 {
