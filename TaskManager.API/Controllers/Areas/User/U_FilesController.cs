@@ -2,7 +2,7 @@
 using TaskManager.API.Attributes;
 using TaskManager.Application.Files.Commands.DeleteFile;
 using TaskManager.Application.Files.Commands.UploadFile;
-using TaskManager.Application.Files.Queries.DownloadFile;
+using TaskManager.Application.Files.Queries.GetFile;
 using TaskManager.Core.Identity.Static;
 using TaskManager.Shared.Responses;
 
@@ -39,9 +39,9 @@ public sealed class U_FilesController : BaseController
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> DownloadFile(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetFileResponse>> GetFile(Guid id, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new DownloadFile(id), cancellationToken);
-        return File(result.Content, result.ContentType, result.FileName);
+        var result = await Mediator.Send(new GetFile(id), cancellationToken);
+        return Ok(result);
     }
 }

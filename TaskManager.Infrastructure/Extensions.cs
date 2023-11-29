@@ -24,6 +24,8 @@ using TaskManager.Infrastructure.EF.TaskCategories.Repositories;
 using TaskManager.Infrastructure.EF.Tasks.Repositories;
 using TaskManager.Infrastructure.Integrations.Emails.Configuration;
 using TaskManager.Infrastructure.Integrations.Emails.Sender;
+using TaskManager.Infrastructure.Integrations.FileStorage.Configuration;
+using TaskManager.Infrastructure.Integrations.FileStorage.Services;
 
 namespace TaskManager.Infrastructure;
 
@@ -37,6 +39,10 @@ public static class Extensions
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddSingleton<IConfigurationSmtp, ConfigurationSmtp>();
+
+        var s3Config = new S3Config();
+        configuration.GetSection("S3Service").Bind(s3Config);
+        services.AddSingleton(s3Config);
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IDateService, DateService>();
@@ -51,6 +57,7 @@ public static class Extensions
         
         services.AddScoped<IEmailSenderService, SmtpSenderService>();
         services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IS3StorageService, S3StorageService>();
 
         services.AddDbContext<EFContext>(options =>
         {

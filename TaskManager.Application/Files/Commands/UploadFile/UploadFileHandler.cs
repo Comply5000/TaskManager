@@ -13,28 +13,32 @@ public sealed class UploadFileHandler : IRequestHandler<UploadFile, UploadFileRe
     private readonly IFileRepository _fileRepository;
     private readonly IFileStorageService _fileStorageService;
     private readonly IFileSizeService _fileSizeService;
+    private readonly IS3StorageService _s3StorageService;
 
-    public UploadFileHandler(IFileRepository fileRepository, IFileStorageService fileStorageService, IFileSizeService fileSizeService)
+    public UploadFileHandler(IFileRepository fileRepository, IFileStorageService fileStorageService, IFileSizeService fileSizeService, IS3StorageService s3StorageService)
     {
         _fileRepository = fileRepository;
         _fileStorageService = fileStorageService;
         _fileSizeService = fileSizeService;
+        _s3StorageService = s3StorageService;
     }
     
     public async Task<UploadFileResponse> Handle(UploadFile request, CancellationToken cancellationToken)
     {
         await _fileSizeService.CheckMaxFilesSize(request.File.Length, request.TaskId, cancellationToken);
         
-        var fileUploadResult = await _fileStorageService.UploadAsync(request.File, cancellationToken);
+        //var fileUploadResult = await _fileStorageService.UploadAsync(request.File, cancellationToken);
+        var s3Key = await _s3StorageService.UploadFileAsync(request.File, cancellationToken);
 
         var file = new SystemFile
         {
             TaskId = request.TaskId,
             Name = request.File.FileName,
             Type = FileType.NoData,
-            TotalBytes = fileUploadResult.File.File.Length,
-            Data = fileUploadResult.File.File,
-            ContentType = fileUploadResult.File?.ContentType
+            TotalBytes = request.File.Length,
+            //Data = fileUploadResult.File.File,
+            ContentType = request.File.ContentType,
+            S3Key = s3Key
         };
 
         var fileId = await _fileRepository.AddAsync(file, cancellationToken);

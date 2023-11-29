@@ -11,6 +11,7 @@ public class SystemFile : BaseEntity
     public FileType Type { get; set; }
     public byte[] Data { get; set; }
     public long TotalBytes { get; set; }
+    public string S3Key { get; set; }
     
     public Guid? TaskId { get; set; }
     public TaskModel Task { get; set; }

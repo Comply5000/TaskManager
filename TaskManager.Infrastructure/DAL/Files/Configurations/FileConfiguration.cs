@@ -19,6 +19,6 @@ public sealed class FileConfiguration : IEntityTypeConfiguration<SystemFile>
     
     public void Configure(EntityTypeBuilder<SystemFile> builder)
     {
-        builder.HasQueryFilter(x => x.EntryStatus != EntryStatus.Deleted && x.CreatedById == _context._userId);
+        builder.HasQueryFilter(x => x.EntryStatus != EntryStatus.Deleted);
     }
 }

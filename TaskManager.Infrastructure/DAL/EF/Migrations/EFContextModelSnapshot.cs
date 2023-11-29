@@ -122,6 +122,9 @@ namespace TaskManager.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<string>("S3Key")
+                        .HasColumnType("text");
+
                     b.Property<Guid?>("TaskId")
                         .HasColumnType("uuid");
 
