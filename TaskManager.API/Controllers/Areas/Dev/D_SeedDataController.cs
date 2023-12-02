@@ -48,33 +48,33 @@ public class D_SeedDataController : BaseController
         return Ok();
     }
 
-    [HttpPut("move")]
-    public async Task<IActionResult> MoveFileToBucket(CancellationToken cancellationToken)
-    {
-        var files = await _context.Files.ToListAsync(cancellationToken);
-
-        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-   
-        foreach (var file in files)
-        {
-            var uniqueFileName = $"{Guid.NewGuid()}_{file.Name}";
-            using var memoryStream = new MemoryStream(file.Data);
-            var putRequest = new PutObjectRequest
-            {
-                BucketName = _s3Config.BucketName,
-                Key = uniqueFileName,
-                InputStream = memoryStream
-            };
-
-            await _s3Client.PutObjectAsync(putRequest, cancellationToken);
-            
-            file.S3Key = uniqueFileName;
-            _context.Update(file);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        await transaction.CommitAsync(cancellationToken);
-
-        return Ok();
-    }
+    // [HttpPut("move")]
+    // public async Task<IActionResult> MoveFileToBucket(CancellationToken cancellationToken)
+    // {
+    //     var files = await _context.Files.ToListAsync(cancellationToken);
+    //
+    //     await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+    //
+    //     foreach (var file in files)
+    //     {
+    //         var uniqueFileName = $"{Guid.NewGuid()}_{file.Name}";
+    //         using var memoryStream = new MemoryStream(file.Data);
+    //         var putRequest = new PutObjectRequest
+    //         {
+    //             BucketName = _s3Config.BucketName,
+    //             Key = uniqueFileName,
+    //             InputStream = memoryStream
+    //         };
+    //
+    //         await _s3Client.PutObjectAsync(putRequest, cancellationToken);
+    //         
+    //         file.S3Key = uniqueFileName;
+    //         _context.Update(file);
+    //         await _context.SaveChangesAsync(cancellationToken);
+    //     }
+    //
+    //     await transaction.CommitAsync(cancellationToken);
+    //
+    //     return Ok();
+    // }
 }

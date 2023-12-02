@@ -8,7 +8,7 @@ using TaskManager.Core.Identity.Entities;
 using TaskManager.Core.Identity.Services;
 using TaskManager.Core.TaskCategories.Entities;
 using TaskManager.Core.Tasks.Entities;
-using TaskManager.Infrastructure.EF.Files.Configurations;
+using TaskManager.Infrastructure.DAL.Files.Configurations;
 using TaskManager.Infrastructure.EF.Identity.Configurations;
 using TaskManager.Infrastructure.EF.TaskCategories.Configurations;
 using TaskManager.Infrastructure.EF.Tasks.Configurations;
