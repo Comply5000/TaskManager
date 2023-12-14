@@ -20,7 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Files\Queries\" />
       <Folder Include="Tasks\Queries\" />
     </ItemGroup>
 

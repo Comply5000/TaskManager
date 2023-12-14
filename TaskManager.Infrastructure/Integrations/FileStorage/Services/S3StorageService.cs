@@ -79,4 +79,27 @@ public sealed class S3StorageService : IS3StorageService
             throw new S3UnknownException();
         }
     }
+
+    public async Task<Stream> GetFileAsync(string fileKey, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var request = new GetObjectRequest
+            {
+                BucketName = _s3Config.BucketName,
+                Key = fileKey,
+            };
+
+            var response = await _s3Client.GetObjectAsync(request, cancellationToken);
+            return response.ResponseStream;
+        }
+        catch (AmazonS3Exception e)
+        {
+            throw new S3GetUrlException(e.ErrorCode);
+        }
+        catch (Exception e)
+        {
+            throw new S3UnknownException();
+        }
+    }
 }

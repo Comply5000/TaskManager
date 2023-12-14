@@ -3,6 +3,8 @@ using TaskManager.API.Attributes;
 using TaskManager.Application.Files.Commands.DeleteFile;
 using TaskManager.Application.Files.Commands.UploadFile;
 using TaskManager.Application.Files.Queries.GetFile;
+using TaskManager.Application.Files.Queries.GetTaskFiles;
+using TaskManager.Core.Files.Services;
 using TaskManager.Core.Identity.Static;
 using TaskManager.Shared.Responses;
 
@@ -13,6 +15,13 @@ namespace TaskManager.API.Controllers.Areas.User;
 [ApiAuthorize(Roles = UserRoles.User)]
 public sealed class U_FilesController : BaseController
 {
+    private readonly IS3StorageService _s3StorageService;
+
+    public U_FilesController(IS3StorageService s3StorageService)
+    {
+        _s3StorageService = s3StorageService;
+    }
+    
     /// <summary>
     /// Add file to Task
     /// </summary>
@@ -28,7 +37,7 @@ public sealed class U_FilesController : BaseController
     
     
     [HttpDelete("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteFile(Guid id, CancellationToken cancellationToken)
     {
@@ -37,11 +46,20 @@ public sealed class U_FilesController : BaseController
     }
     
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<GetFileResponse>> GetFile(Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetFile(id), cancellationToken);
         return Ok(result);
+    }
+    
+    [HttpGet("{taskId:guid}/download-all")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetFiles(Guid taskId, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new GetTaskFiles(taskId), cancellationToken);
+        return File(result.Content, result.ContentType, result.FileName);
     }
 }

@@ -13,6 +13,7 @@ using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Core.TaskCategories.Repositories;
 using TaskManager.Core.Tasks.Repositories;
+using TaskManager.Infrastructure.DAL.Files.Services;
 using TaskManager.Infrastructure.DAL.Identity.Services;
 using TaskManager.Infrastructure.EF.Common.PipelineBehaviors;
 using TaskManager.Infrastructure.EF.Context;
@@ -58,6 +59,7 @@ public static class Extensions
         services.AddScoped<IEmailSenderService, SmtpSenderService>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IS3StorageService, S3StorageService>();
+        services.AddScoped<IFileZipService, FileZipService>();
 
         services.AddDbContext<EFContext>(options =>
         {
