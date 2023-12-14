@@ -40,10 +40,8 @@ public static class Extensions
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddSingleton<IConfigurationSmtp, ConfigurationSmtp>();
-
-        var s3Config = new S3Config();
-        configuration.GetSection("S3Service").Bind(s3Config);
-        services.AddSingleton(s3Config);
+        
+        services.Configure<S3Config>(configuration.GetSection("S3Service"));
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IDateService, DateService>();

@@ -10,13 +10,12 @@ namespace TaskManager.API.Extensions;
 
 public static class IdentityExtension
 {
-    public static IServiceCollection AddIdentityConfig(this IServiceCollection services, IConfiguration _config)
+    public static IServiceCollection AddIdentityConfig(this IServiceCollection services, IConfiguration configuration)
     {
         var authConfig = new AuthConfig();
-        _config.GetSection("Authentication").Bind(authConfig);
-
+        configuration.GetSection("Authentication").Bind(authConfig);
         services.AddSingleton(authConfig);
-        
+
         ////Configure identity
         services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<EFContext>()
