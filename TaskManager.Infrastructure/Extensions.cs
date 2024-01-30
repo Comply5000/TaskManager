@@ -41,7 +41,9 @@ public static class Extensions
 
         services.AddSingleton<IConfigurationSmtp, ConfigurationSmtp>();
         
-        services.Configure<S3Config>(configuration.GetSection("S3Service"));
+        var s3Config = new S3Config();
+        configuration.GetSection("S3Service").Bind(s3Config);
+        services.AddSingleton(s3Config);
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IDateService, DateService>();

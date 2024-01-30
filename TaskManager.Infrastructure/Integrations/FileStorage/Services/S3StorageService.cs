@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using System.Security.Cryptography;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.AspNetCore.Http;
 using TaskManager.Core.Files.Services;
@@ -34,7 +35,10 @@ public sealed class S3StorageService : IS3StorageService
             BucketName = _s3Config.BucketName,
             Key = uniqueFileName,
             InputStream = stream,
-            ContentType = file.ContentType
+            ContentType = file.ContentType,
+            // ServerSideEncryptionCustomerMethod = ServerSideEncryptionCustomerMethod.AES256,
+            // ServerSideEncryptionCustomerProvidedKey = key,
+            // ServerSideEncryptionCustomerProvidedKeyMD5 = Convert.ToBase64String(MD5.HashData(Convert.FromBase64String(key)))
         };
         try
         {
@@ -88,6 +92,9 @@ public sealed class S3StorageService : IS3StorageService
             {
                 BucketName = _s3Config.BucketName,
                 Key = fileKey,
+                // ServerSideEncryptionCustomerMethod = ServerSideEncryptionCustomerMethod.AES256,
+                // ServerSideEncryptionCustomerProvidedKey = key,
+                // ServerSideEncryptionCustomerProvidedKeyMD5 = Convert.ToBase64String(MD5.HashData(Convert.FromBase64String(key)))
             };
 
             var response = await _s3Client.GetObjectAsync(request, cancellationToken);
