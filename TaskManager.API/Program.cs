@@ -48,6 +48,13 @@ builder.Services.Configure<ApiBehaviorOptions>(opt =>
 // builder.Host.UseSerilog((context, configuration) =>
 //     configuration.ReadFrom.Configuration(context.Configuration));
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddIdentityConfig(builder.Configuration);
 builder.Services.AddHttpClient();

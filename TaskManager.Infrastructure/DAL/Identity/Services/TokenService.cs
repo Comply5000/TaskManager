@@ -1,8 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TaskManager.Application.Shared.Common.Identity;
+using TaskManager.Core.Identity.DTOs;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Shared.Configurations.Identity;
 using JsonWebToken = TaskManager.Core.Identity.DTOs.JsonWebToken;
@@ -78,5 +80,16 @@ public class TokenService : ITokenService
             Roles = roles ?? EmptyRoles,
             Claims = claims?.ToDictionary(a => a.Type, a => a.Value) ?? EmptyClaims
         };
+    }
+
+    public RefreshToken GenerateRefreshToken()
+    {
+        var refreshToken = new RefreshToken
+        {
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+            Expires = _dateService.CurrentDate().AddDays(_authConfig.RefreshTokenTTL)
+        };
+
+        return refreshToken;
     }
 }

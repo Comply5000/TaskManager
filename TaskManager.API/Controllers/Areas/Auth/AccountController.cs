@@ -3,12 +3,15 @@ using System.Security.Principal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.API.Attributes;
+using TaskManager.API.Common.Static;
 using TaskManager.Application.Emails.Events.ConfirmAccountEmail;
 using TaskManager.Application.Emails.Events.ResetPasswordEmail;
 using TaskManager.Application.Identity.Commands.ChangePassword;
 using TaskManager.Application.Identity.Commands.ConfirmAccount;
+using TaskManager.Application.Identity.Commands.RefreshToken;
 using TaskManager.Application.Identity.Commands.ResetPassword;
 using TaskManager.Application.Identity.Commands.SignIn;
+using TaskManager.Application.Identity.Commands.SignOut;
 using TaskManager.Application.Identity.Commands.SignUp;
 using TaskManager.Application.Identity.Queries.MyAccountData;
 using TaskManager.Application.Shared.Common.Identity;
@@ -38,6 +41,29 @@ public class AccountController : BaseController
     public async Task<ActionResult<JsonWebToken>> SignUp(SignIn command, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(command, cancellationToken);
+        SetRefreshTokenCookie(result.RefreshToken);
+        return Ok(result);
+    }
+    
+    [HttpPost("sign-out")]
+    [ApiAuthorize(Roles = UserRoles.User)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<JsonWebToken>> SignOut(SignOut command, CancellationToken cancellationToken)
+    {
+        await Mediator.Send(command, cancellationToken);
+        Response.Cookies.Delete(Tokens.RefreshToken);
+        return Ok();
+    }
+    
+    [HttpPost("refresh-token")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<JsonWebToken>> RefreshToken(CancellationToken cancellationToken)
+    {
+        var refreshToken = Request.Cookies[Tokens.RefreshToken];
+        var result = await Mediator.Send(new RefreshTokenCommand(refreshToken), cancellationToken);
+        SetRefreshTokenCookie(result.RefreshToken);
         return Ok(result);
     }
     
@@ -86,5 +112,17 @@ public class AccountController : BaseController
     {
         var result = await Mediator.Send(new MyAccountData(), cancellationToken);
         return OkOrNotFound(result);
+    }
+    
+    private void SetRefreshTokenCookie(RefreshToken refreshToken)
+    {
+        var cookieOptions = new CookieOptions
+        {
+            Expires = refreshToken.Expires,
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict
+        };
+        Response.Cookies.Append(Tokens.RefreshToken, refreshToken.Token, cookieOptions);
     }
 }

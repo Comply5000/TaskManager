@@ -10,4 +10,7 @@ public sealed class User : IdentityUser<Guid>
     public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     public ICollection<UserClaim> UserClaims { get; set; } = new List<UserClaim>();
     
+    public string RefreshToken { get; set; }
+    public DateTimeOffset RefreshTokenExpires { get; set; }
+    
 }

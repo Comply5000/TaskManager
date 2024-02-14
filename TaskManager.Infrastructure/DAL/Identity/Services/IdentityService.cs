@@ -99,14 +99,22 @@ public sealed class IdentityService : IIdentityService
         if (!result.Succeeded)
             throw new SignInException(result);
 
-        var roles = await _userManager.GetRolesAsync(user);
-        var claims = await _userManager.GetClaimsAsync(user);
-
-        var jwt = _tokenService.GenerateAccessToken(user.Id, roles, claims);
-
-        jwt.Email = user.Email;
+        var jwt = await GenerateJwtAsync(user, cancellationToken);
 
         return jwt;
+    }
+
+    public async Task SignOut(CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == _currentUserService.UserId, cancellationToken)
+                   ?? throw new UserNotFoundException();
+
+        user.RefreshToken = null;
+        
+        _context.Update(user);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        await _signInManager.SignOutAsync();
     }
 
     public async Task<string> GenerateEmailConfirmationTokenAsync(User user, CancellationToken cancellationToken)
@@ -164,5 +172,39 @@ public sealed class IdentityService : IIdentityService
             Token = token,
             UserId = user.Id
         };
+    }
+
+    public async Task<JsonWebToken> RefreshTokenAsync(string? refreshToken, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.Users
+                       .FirstOrDefaultAsync(x => x.RefreshToken == refreshToken, cancellationToken)
+                   ?? throw new InvalidRefreshTokenException();
+        
+        if(user.RefreshTokenExpires <= _dateService.CurrentOffsetDate())
+            throw new InvalidRefreshTokenException();
+
+        var jwt = await GenerateJwtAsync(user, cancellationToken);
+        
+        return jwt;
+    }
+    
+    private async Task<JsonWebToken> GenerateJwtAsync(User user, CancellationToken cancellationToken)
+    {
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var userClaims = await _userManager.GetClaimsAsync(user);
+            
+        var jwt = _tokenService.GenerateAccessToken(user.Id, userRoles, userClaims);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        jwt.Email = user.Email;
+        jwt.RefreshToken = refreshToken;
+        
+        user.RefreshToken = refreshToken.Token;
+        user.RefreshTokenExpires = refreshToken.Expires;
+        
+        _context.Update(user);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return jwt;
     }
 }
