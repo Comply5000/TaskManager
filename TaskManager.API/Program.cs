@@ -47,7 +47,7 @@ builder.Services.Configure<ApiBehaviorOptions>(opt =>
 
 // builder.Host.UseSerilog((context, configuration) =>
 //     configuration.ReadFrom.Configuration(context.Configuration));
-
+ 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
