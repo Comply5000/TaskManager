@@ -12,6 +12,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Shared", "TaskM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Shared.Abstractions", "TaskManager.Shared.Abstractions\TaskManager.Shared.Abstractions.csproj", "{A67A7543-9A67-4889-84A7-01A0F1474962}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3179012D-EDCD-4A75-B8D5-64D453D2E809}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D043EFE1-F314-4662-9F95-58E085C92B0F}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+		.dockerignore = .dockerignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +51,13 @@ Global
 		{A67A7543-9A67-4889-84A7-01A0F1474962}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A67A7543-9A67-4889-84A7-01A0F1474962}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A67A7543-9A67-4889-84A7-01A0F1474962}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A67A7543-9A67-4889-84A7-01A0F1474962} = {3179012D-EDCD-4A75-B8D5-64D453D2E809}
+		{CE13AFC4-711A-48B5-B483-CB3F1231E51F} = {3179012D-EDCD-4A75-B8D5-64D453D2E809}
+		{EEBF7677-56BB-47E2-A600-146C2888B125} = {3179012D-EDCD-4A75-B8D5-64D453D2E809}
+		{E9612368-D2C0-4B9D-890E-4ECE3EB901BF} = {3179012D-EDCD-4A75-B8D5-64D453D2E809}
+		{EBD42782-6564-41F6-A3D3-46C64BF6A2CC} = {3179012D-EDCD-4A75-B8D5-64D453D2E809}
+		{6976ED98-EF85-41E3-9E45-BC4F316FD543} = {3179012D-EDCD-4A75-B8D5-64D453D2E809}
 	EndGlobalSection
 EndGlobal
