@@ -22,4 +22,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: comply5000/task-manager:latest
+          tags: comply5000/task-manager-api:latest
