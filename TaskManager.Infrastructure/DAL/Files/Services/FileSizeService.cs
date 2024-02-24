@@ -2,7 +2,7 @@
 using TaskManager.Core.Files.Exceptions;
 using TaskManager.Core.Files.Services;
 using TaskManager.Core.Identity.Services;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 using TaskManager.Shared;
 
 namespace TaskManager.Infrastructure.EF.Files.Services;

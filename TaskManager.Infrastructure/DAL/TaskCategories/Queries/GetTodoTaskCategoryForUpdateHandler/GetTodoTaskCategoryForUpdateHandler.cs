@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Application.TaskCategories.Queries.GetTaskCategoryForUpdate;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 
 namespace TaskManager.Infrastructure.EF.TaskCategories.Queries.GetTodoTaskCategoryForUpdateHandler;
 

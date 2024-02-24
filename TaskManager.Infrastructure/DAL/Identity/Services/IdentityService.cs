@@ -10,7 +10,7 @@ using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Identity.Static;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Core.TaskCategories.Entities;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 using TaskManager.Shared;
 using TaskManager.Shared.Exceptions;
 

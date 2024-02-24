@@ -39,7 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DAL\EF\" />
+      <Folder Include="DAL\EF\Migrations\" />
     </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Application.Files.Queries.GetFile;
 using TaskManager.Core.Files.Services;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 
 namespace TaskManager.Infrastructure.DAL.Files.Queries.GetFileHandler;
 

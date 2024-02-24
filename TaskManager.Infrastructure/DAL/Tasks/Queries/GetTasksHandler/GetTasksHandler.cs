@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Application.Tasks.Queries.GetTasks;
 using TaskManager.Core.Shared.Services;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 using TaskManager.Shared.Extensions;
 using EFCore = Microsoft.EntityFrameworkCore.EF;
 

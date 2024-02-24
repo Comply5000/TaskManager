@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Tasks.Entities;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 using TaskManager.Shared.Abstractions.Enums;
 
 namespace TaskManager.Infrastructure.EF.Tasks.Configurations;

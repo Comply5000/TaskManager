@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManager.Core.Tasks.Entities;
 using TaskManager.Core.Tasks.Repositories;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 
 namespace TaskManager.Infrastructure.EF.Tasks.Repositories;
 

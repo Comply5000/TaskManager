@@ -5,19 +5,17 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Core.Files.Entities;
 using TaskManager.Core.Identity.Entities;
-using TaskManager.Core.Identity.Services;
 using TaskManager.Core.TaskCategories.Entities;
 using TaskManager.Core.Tasks.Entities;
 using TaskManager.Infrastructure.DAL.Files.Configurations;
-using TaskManager.Infrastructure.EF.Identity.Configurations;
 using TaskManager.Infrastructure.EF.TaskCategories.Configurations;
 using TaskManager.Infrastructure.EF.Tasks.Configurations;
 using TaskManager.Shared.Abstractions.Entities;
 using TaskManager.Shared.Abstractions.Enums;
 
-namespace TaskManager.Infrastructure.EF.Context;
+namespace TaskManager.Infrastructure.DAL.EF.Context;
 
-public class EFContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
+public class EFContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
     public DbSet<TaskModel> Tasks { get; set; }
     public DbSet<TaskCategory> TaskCategories { get; set; }
@@ -48,9 +46,7 @@ public class EFContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole
         //         }
         //     }
         // }
-
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        
         modelBuilder.ApplyConfiguration(new TaskConfiguration(this));
         modelBuilder.ApplyConfiguration(new TaskCategoryConfiguration(this));
         modelBuilder.ApplyConfiguration(new FileConfiguration(this));

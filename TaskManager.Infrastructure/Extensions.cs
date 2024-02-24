@@ -13,10 +13,11 @@ using TaskManager.Core.Identity.Services;
 using TaskManager.Core.Shared.Services;
 using TaskManager.Core.TaskCategories.Repositories;
 using TaskManager.Core.Tasks.Repositories;
+using TaskManager.Infrastructure.DAL.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Initializer;
 using TaskManager.Infrastructure.DAL.Files.Services;
 using TaskManager.Infrastructure.DAL.Identity.Services;
 using TaskManager.Infrastructure.EF.Common.PipelineBehaviors;
-using TaskManager.Infrastructure.EF.Context;
 using TaskManager.Infrastructure.EF.Files.Repositories;
 using TaskManager.Infrastructure.EF.Files.Services;
 using TaskManager.Infrastructure.EF.Identity.Services;
@@ -70,6 +71,8 @@ public static class Extensions
                     opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 }).LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
         });
+        
+        services.AddHostedService<DatabaseInitializer>();
         
         return services;
     }

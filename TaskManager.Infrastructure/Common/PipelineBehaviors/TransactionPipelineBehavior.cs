@@ -1,6 +1,6 @@
 ﻿using System.Transactions;
 using MediatR;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 using TaskManager.Shared.Requests;
 
 namespace TaskManager.Infrastructure.EF.Common.PipelineBehaviors;

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Application.Identity.Queries.MyAccountData;
 using TaskManager.Core.Identity.Services;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 
 namespace TaskManager.Infrastructure.EF.Identity.Queries.MyAccountDataHandler;
 

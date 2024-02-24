@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Application.TaskCategories.Queries.CheckIfCategoryWithNameExists;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 using EFCore = Microsoft.EntityFrameworkCore.EF;
 
 namespace TaskManager.Infrastructure.EF.TaskCategories.Queries.CheckIfCategoryWithNameExistsHandler;
