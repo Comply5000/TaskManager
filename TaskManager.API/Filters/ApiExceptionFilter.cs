@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using TaskManager.Core.Identity.Exceptions;
-using TaskManager.Infrastructure.EF.Context;
 using TaskManager.Shared.Abstractions.Exceptions;
 using TaskManager.Shared.Exceptions;
 

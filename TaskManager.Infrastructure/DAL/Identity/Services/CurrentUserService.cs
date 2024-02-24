@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using TaskManager.Core.Identity.Services;
-using TaskManager.Infrastructure.EF.Context;
 
 namespace TaskManager.Infrastructure.DAL.Identity.Services;
 

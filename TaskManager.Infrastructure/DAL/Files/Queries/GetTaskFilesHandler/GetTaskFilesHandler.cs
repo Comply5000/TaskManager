@@ -4,7 +4,7 @@ using TaskManager.Application.Files.Queries.GetTaskFiles;
 using TaskManager.Core.Files.DTOs;
 using TaskManager.Core.Files.Services;
 using TaskManager.Core.Tasks.Exceptions;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 
 namespace TaskManager.Infrastructure.DAL.Files.Queries.GetTaskFilesHandler;
 

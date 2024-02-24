@@ -4,7 +4,7 @@
     <option name="keyValueStorage">
       <map>
         <entry key="Common:buildConfiguration" value="Debug" />
-        <entry key="Common:eebf7677-56bb-47e2-a600-146c2888b125:dbContext" value="TaskManager.Infrastructure.EF.Context.EFContext" />
+        <entry key="Common:eebf7677-56bb-47e2-a600-146c2888b125:dbContext" value="TaskManager.Infrastructure.DAL.EF.Context.EFContext" />
         <entry key="Common:noBuild" value="false" />
         <entry key="Common:outputFolder" value="DAL\EF\Migrations" />
         <entry key="Common:useDefaultConnection" value="true" />

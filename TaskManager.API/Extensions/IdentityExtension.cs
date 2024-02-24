@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TaskManager.Core.Identity.Entities;
-using TaskManager.Infrastructure.EF.Context;
+using TaskManager.Infrastructure.DAL.EF.Context;
 using TaskManager.Shared.Configurations.Identity;
 
 namespace TaskManager.API.Extensions;
@@ -17,7 +17,7 @@ public static class IdentityExtension
         services.AddSingleton(authConfig);
 
         ////Configure identity
-        services.AddIdentity<User, Role>()
+        services.AddIdentity<User, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<EFContext>()
             .AddDefaultTokenProviders();
 
