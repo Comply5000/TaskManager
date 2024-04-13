@@ -15,13 +15,6 @@ namespace TaskManager.API.Controllers.Areas.User;
 [ApiAuthorize(Roles = UserRoles.User)]
 public sealed class U_FilesController : BaseController
 {
-    private readonly IS3StorageService _s3StorageService;
-
-    public U_FilesController(IS3StorageService s3StorageService)
-    {
-        _s3StorageService = s3StorageService;
-    }
-    
     /// <summary>
     /// Add file to Task
     /// </summary>
@@ -48,7 +41,7 @@ public sealed class U_FilesController : BaseController
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<GetFileResponse>> GetFile(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> GetFile(Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetFile(id), cancellationToken);
         return Ok(result);
