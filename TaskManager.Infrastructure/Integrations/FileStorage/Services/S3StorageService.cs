@@ -28,25 +28,42 @@ public sealed class S3StorageService : IS3StorageService
     public async Task<string> UploadFileAsync(IFormFile file, CancellationToken cancellationToken)
     {
         var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
-
-        await using var stream = file.OpenReadStream();
-        var request = new PutObjectRequest
-        {
-            BucketName = _s3Config.BucketName,
-            Key = uniqueFileName,
-            InputStream = stream,
-            ContentType = file.ContentType,
-            // ServerSideEncryptionCustomerMethod = ServerSideEncryptionCustomerMethod.AES256,
-            // ServerSideEncryptionCustomerProvidedKey = key,
-            // ServerSideEncryptionCustomerProvidedKeyMD5 = Convert.ToBase64String(MD5.HashData(Convert.FromBase64String(key)))
-        };
+        
         try
         {
-            await _s3Client.PutObjectAsync(request, cancellationToken);
+            await using var stream = file.OpenReadStream();
+            await _s3Client.PutObjectAsync(new PutObjectRequest()
+            {
+                BucketName = _s3Config.BucketName,
+                Key = uniqueFileName,
+                InputStream = stream,
+                ContentType = file.ContentType
+                // ServerSideEncryptionCustomerMethod = ServerSideEncryptionCustomerMethod.AES256,
+                // ServerSideEncryptionCustomerProvidedKey = key,
+                // ServerSideEncryptionCustomerProvidedKeyMD5 = Convert.ToBase64String(MD5.HashData(Convert.FromBase64String(key)))
+            }, cancellationToken);
         }
         catch (AmazonS3Exception e)
         {
-            throw new S3UploadException(e.ErrorCode);
+            if(e.ErrorCode == "NoSuchBucket")
+                throw new S3UploadException(e.ErrorCode);
+            
+            var putBucketRequest = new PutBucketRequest
+            {
+                BucketName = _s3Config.BucketName,
+            };
+            await _s3Client.PutBucketAsync(putBucketRequest, cancellationToken);
+                
+            await using var stream = file.OpenReadStream();
+            await _s3Client.PutObjectAsync(new PutObjectRequest()
+            {
+                BucketName = _s3Config.BucketName,
+                Key = uniqueFileName,
+                InputStream = stream,
+                ContentType = file.ContentType
+            }, cancellationToken);
+                
+            return uniqueFileName;
         }
         catch (Exception e)
         {
