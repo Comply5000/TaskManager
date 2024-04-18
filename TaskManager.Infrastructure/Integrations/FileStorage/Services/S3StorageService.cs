@@ -45,7 +45,7 @@ public sealed class S3StorageService : IS3StorageService
         }
         catch (AmazonS3Exception e)
         {
-            if(e.ErrorCode == "NoSuchBucket")
+            if(e.ErrorCode != "NoSuchBucket")
                 throw new S3UploadException(e.ErrorCode);
             
             var putBucketRequest = new PutBucketRequest
