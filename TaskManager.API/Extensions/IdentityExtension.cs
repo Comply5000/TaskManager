@@ -53,6 +53,11 @@ public static class IdentityExtension
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+            .AddGoogle(options =>
+            {
+                options.ClientId = configuration.GetValue<string>("GoogleAuth:ClientId")!;
+                options.ClientSecret = configuration.GetValue<string>("GoogleAuth:ClientSecret")!;
+            })
             .AddCookie(cfg => cfg.SlidingExpiration = true)
             .AddJwtBearer(cfg =>
             {

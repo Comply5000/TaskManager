@@ -1,5 +1,6 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Serilog;
@@ -67,6 +68,15 @@ builder.Services.AddApplication();
 builder.Services.AddCore();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 Globals.ApplicationUrl = builder.Configuration.GetValue<string>("ApplicationConfig:ApplicationUrl");
 
 var app = builder.Build();
@@ -85,9 +95,12 @@ app.Use(async (context, next) =>
     await next();
 });
 
+app.UseForwardedHeaders(); 
 app.UseHttpsRedirection();
 app.UseRouting();
+
 app.UseCors("CorsPolicy");
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
