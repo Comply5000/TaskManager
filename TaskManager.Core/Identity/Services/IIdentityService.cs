@@ -14,4 +14,5 @@ public interface IIdentityService
     Task ChangePassword(string currentPassword, string newPassword, CancellationToken cancellationToken);
     Task<ResetPasswordTokenDto> GeneratePasswordResetTokenAsync(string email, CancellationToken cancellationToken);
     Task<JsonWebToken> RefreshTokenAsync(string? refreshToken, CancellationToken cancellationToken);
+    Task<JsonWebToken> SignInGoogle(CancellationToken cancellationToken);
 }

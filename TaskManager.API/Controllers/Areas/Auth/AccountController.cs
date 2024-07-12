@@ -160,6 +160,7 @@ public class AccountController : BaseController
             var result = JsonConvert.DeserializeObject<JsonWebToken>(json);
                 
             HttpContext.Session.Remove(sessionId);
+            SetRefreshTokenCookie(result.RefreshToken);
                 
             return Ok(result);
         }

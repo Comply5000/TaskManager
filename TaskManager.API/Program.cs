@@ -48,6 +48,14 @@ builder.Services.Configure<ApiBehaviorOptions>(opt =>
 
 // builder.Host.UseSerilog((context, configuration) =>
 //     configuration.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddDistributedMemoryCache(); // Dodaj cache pamięciowy (in-memory)
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Ustaw czas wygaśnięcia sesji
+    options.Cookie.HttpOnly = true; // Ustawienia ciasteczek
+    options.Cookie.IsEssential = true; // Ciasteczka sesji są niezbędne
+});
  
 builder.Services.ConfigureApplicationCookie(options =>
 {
