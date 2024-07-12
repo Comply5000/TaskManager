@@ -187,7 +187,64 @@ public sealed class IdentityService : IIdentityService
         
         return jwt;
     }
-    
+
+    public async Task<JsonWebToken> SignInGoogle(CancellationToken cancellationToken)
+    {
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info is null)
+            throw new UserNotFoundException();
+        
+        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+        
+        if (result.Succeeded)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == info.Principal.FindFirst(ClaimTypes.Email).Value, cancellationToken)
+                       ?? throw new UserNotFoundException();
+            
+            return await GenerateJwtAsync(user, cancellationToken);
+        }
+
+        var newUser = new User
+        {
+            Email = info.Principal.FindFirst(ClaimTypes.Email)?.Value,
+            UserName = info.Principal.FindFirst(ClaimTypes.Email)?.Value,
+            EmailConfirmed = true,
+            UserStatus = UserStatus.Active
+        };
+        
+        var createResult = await _userManager.CreateAsync(newUser);
+        if (!createResult.Succeeded) 
+            throw new CreateUserException(createResult.Errors);
+        
+        #region Create default category
+        var defaultCategory = TaskCategory.Create(Globals.DefaultCategoryName, null, null);
+        defaultCategory.CreatedById = newUser.Id;
+        defaultCategory.CreatedAt = _dateService.CurrentOffsetDate();
+        await _context.AddAsync(defaultCategory, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        #endregion
+        
+        var addRoleResult = await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+        if (!addRoleResult.Succeeded)
+            throw new AddToRoleException();
+
+        var addEmailClaimResult = await _userManager.AddClaimAsync(newUser, new Claim(ClaimTypes.Email, newUser.Email));
+        if (!addEmailClaimResult.Succeeded)
+            throw new AddClaimException();
+        
+        var addNameClaimResult = await _userManager.AddClaimAsync(newUser, new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString()));
+        if (!addNameClaimResult.Succeeded)
+            throw new AddClaimException();
+        
+        var addLoginResult = await _userManager.AddLoginAsync(newUser, info);
+        if (!addLoginResult.Succeeded)
+            throw new CreateUserException(addLoginResult.Errors);
+        
+        await _signInManager.RefreshSignInAsync(newUser);
+        
+        return await GenerateJwtAsync(newUser, cancellationToken);
+    }
+
     private async Task<JsonWebToken> GenerateJwtAsync(User user, CancellationToken cancellationToken)
     {
         var userRoles = await _userManager.GetRolesAsync(user);
